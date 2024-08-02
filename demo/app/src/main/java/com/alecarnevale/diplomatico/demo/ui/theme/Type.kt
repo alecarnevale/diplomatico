@@ -1,4 +1,4 @@
-package com.alecarnevale.diplomatico.ui.theme
+package com.alecarnevale.diplomatico.demo.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
