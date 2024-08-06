@@ -15,5 +15,10 @@ internal class DiplomaticoPlugin : Plugin<Project> {
     target.tasks.register("updateRoomLevels", UpdateRoomLevelsTask::class.java) {
       it.group = "diplomatico"
     }
+
+    // TODO support debug/release
+    target.tasks.named("assemble") {
+      it.finalizedBy(target.tasks.named("checkRoomLevels"))
+    }
   }
 }
