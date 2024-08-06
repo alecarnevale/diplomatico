@@ -14,4 +14,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "diplomatico"
+include(":api")
+include(":processors")
 include(":demo:app")
