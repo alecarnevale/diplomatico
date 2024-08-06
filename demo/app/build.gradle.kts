@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose.compiler)
     alias(libs.plugins.kotlinter)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.diplomatico)
 }
 
 android {
@@ -57,8 +58,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(project(":api"))
-
     ksp(libs.androidx.room.compiler)
-    ksp(project(":processors"))
+
+    // applied automatically by gradle plugin
+    // implementation(project(":api"))
+    // ksp(project(":processors"))
 }

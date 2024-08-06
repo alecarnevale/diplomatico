@@ -14,6 +14,9 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "diplomatico"
+
+includeBuild("gradle/plugins")
+
 include(":api")
 include(":processors")
 include(":demo:app")
