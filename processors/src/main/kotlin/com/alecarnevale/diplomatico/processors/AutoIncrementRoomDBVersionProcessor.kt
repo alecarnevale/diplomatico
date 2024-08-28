@@ -23,7 +23,7 @@ internal class AutoIncrementRoomDBVersionProcessor(
   private var resolvedSymbols = setOf<KSAnnotated>()
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
-    val visitor = AutoIncrementRoomDBVersionVisitor(logger = logger)
+    val visitor = AutoIncrementRoomDBVersionVisitor(resolver = resolver, logger = logger)
 
     val annotationName = AutoIncrementRoomDBVersion::class.qualifiedName ?: return emptyList()
 
@@ -54,7 +54,7 @@ internal class AutoIncrementRoomDBVersionProcessor(
       ).use { stream ->
         OutputStreamWriter(stream, StandardCharsets.UTF_8).use { writer ->
           outputs.forEach { output ->
-            writer.write("${output.hash},${output.qualifiedName}")
+            writer.appendLine("${output.hash},${output.qualifiedName}")
           }
         }
       }

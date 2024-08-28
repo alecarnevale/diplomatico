@@ -12,24 +12,108 @@ import org.junit.jupiter.api.Test
 @OptIn(ExperimentalCompilerApi::class)
 class AutoIncrementRoomDBVersionProcessorProviderTest {
   @Test
-  fun `WHEN @AutoBinds is applied to a val, THEN compilation error and hilt module is not generated`() {
-    val src =
+  fun `GIVEN a class Foo without Database annotation WHEN @AutoIncrementRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
+    val foo =
       SourceFile.kotlin(
         "Foo.kt",
         """
-      package com.example
+        package com.example
 
-      import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
-      
-      @AutoIncrementRoomDBVersion
-      data class Foo(
-        val x: Int
+        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        
+        @AutoIncrementRoomDBVersion
+        class Foo
+        """.trimIndent(),
       )
-      """,
-      )
-    println("TEST_ALE: $src")
 
-    val result = compileSourceFiles(src)
+    val result = compileSourceFiles(foo)
+
+    assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, result.result.exitCode)
+
+    result.assertZeroGeneratedResources()
+  }
+
+  @Test
+  fun `GIVEN a class FooDatabase with Database annotation but no entities field WHEN @AutoIncrementRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
+    val fooDatabase =
+      SourceFile.kotlin(
+        "FooDatabase.kt",
+        """
+        package com.example
+
+        import androidx.room.Database
+        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        
+        @AutoIncrementRoomDBVersion
+        @Database
+        class FooDatabase
+        """.trimIndent(),
+      )
+
+    val result = compileSourceFiles(fooDatabase)
+
+    assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, result.result.exitCode)
+
+    result.assertZeroGeneratedResources()
+  }
+
+  @Test
+  fun `GIVEN a class Foo with Database annotation but empty entities field WHEN @AutoIncrementRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
+    val fooDatabase =
+      SourceFile.kotlin(
+        "FooDatabase.kt",
+        """
+        package com.example
+
+        import androidx.room.Database
+        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        
+        @AutoIncrementRoomDBVersion
+        @Database(entities = [])
+        class FooDatabase
+        """.trimIndent(),
+      )
+
+    val result = compileSourceFiles(fooDatabase)
+
+    assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, result.result.exitCode)
+
+    result.assertZeroGeneratedResources()
+  }
+
+  @Test
+  fun `GIVEN a class Foo with Database annotation and entities field WHEN @AutoIncrementRoomDBVersion is applied to Foo, THEN a report is generated`() {
+    val fooEntity =
+      SourceFile.kotlin(
+        "FooEntity.kt",
+        """
+        package com.example
+
+        import androidx.room.Entity
+        
+        @Entity
+        data class FooEntity(
+          val x: Int,
+        )
+        """.trimIndent(),
+      )
+
+    val fooDatabase =
+      SourceFile.kotlin(
+        "FooDatabase.kt",
+        """
+        package com.example
+
+        import androidx.room.Database
+        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        
+        @AutoIncrementRoomDBVersion
+        @Database(entities = [FooEntity::class])
+        class FooDatabase
+        """.trimIndent(),
+      )
+
+    val result = compileSourceFiles(fooEntity, fooDatabase)
 
     assertEquals(KotlinCompilation.ExitCode.OK, result.result.exitCode)
 
@@ -37,7 +121,100 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        m+g8Ckp989+D+7jPmZzYNkocoAyGLkUqV5d2LZTO0FQ=,com.example.Foo
+      rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=,com.example.FooDatabase
+      
+      """,
+    )
+  }
+
+  @Test
+  fun `GIVEN a class Foo and a class Bar with Database annotation and entities field WHEN @AutoIncrementRoomDBVersion is applied to Foo and Bar, THEN a report is generated with 2 entry`() {
+    val fooEntity =
+      SourceFile.kotlin(
+        "FooEntity.kt",
+        """
+        package com.example
+
+        import androidx.room.Entity
+        
+        @Entity
+        data class FooEntity(
+          val x: Int,
+        )
+        """.trimIndent(),
+      )
+
+    val fooDatabase =
+      SourceFile.kotlin(
+        "FooDatabase.kt",
+        """
+        package com.example
+
+        import androidx.room.Database
+        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        
+        @AutoIncrementRoomDBVersion
+        @Database(entities = [FooEntity::class])
+        class FooDatabase
+        """.trimIndent(),
+      )
+
+    val barEntity1 =
+      SourceFile.kotlin(
+        "BarEntity1.kt",
+        """
+        package com.example
+
+        import androidx.room.Entity
+        
+        @Entity
+        data class BarEntity1(
+          val x: Int,
+        )
+        """.trimIndent(),
+      )
+
+    val barEntity2 =
+      SourceFile.kotlin(
+        "BarEntity2.kt",
+        """
+        package com.example
+
+        import androidx.room.Entity
+        
+        @Entity
+        data class BarEntity2(
+          val x: Int,
+        )
+        """.trimIndent(),
+      )
+
+    val barDatabase =
+      SourceFile.kotlin(
+        "BarDatabase.kt",
+        """
+        package com.example
+
+        import androidx.room.Database
+        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        
+        @AutoIncrementRoomDBVersion
+        @Database(entities = [BarEntity1::class, BarEntity2::class])
+        class BarDatabase
+        """.trimIndent(),
+      )
+
+    val result = compileSourceFiles(fooEntity, fooDatabase, barEntity1, barEntity2, barDatabase)
+
+    assertEquals(KotlinCompilation.ExitCode.OK, result.result.exitCode)
+
+    result.assertGeneratedResources("com/alecarnevale/diplomatico/results/report.csv")
+    result.assertGeneratedContent(
+      "com/alecarnevale/diplomatico/results/report.csv",
+      """
+      OjhLbkbaR7D2Z5TUDoLt7Llsd/terCdAi1jI3pdMbuU=,com.example.BarDatabase
+      rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=,com.example.FooDatabase
+      
       """,
     )
   }
@@ -45,7 +222,7 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
   private fun compileSourceFiles(vararg sourceFiles: SourceFile): KspCompilationResult {
     val kotlinCompilation =
       KotlinCompilation().apply {
-        sources = sourceFiles.toList()
+        sources = sourceFiles.toMutableList().apply { add(databaseAnnotation) }
         symbolProcessorProviders = listOf(AutoIncrementRoomDBVersionProcessorProvider())
         inheritClassPath = true
       }
@@ -54,4 +231,19 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
       result = kotlinCompilation.compile(),
     )
   }
+}
+
+// we mirror Room Database annotation just for testing purpose
+// otherwise it couldn't possible access its argument
+private val databaseAnnotation by lazy {
+  SourceFile.kotlin(
+    "Database.kt",
+    """
+    package androidx.room
+
+    annotation class Database(
+      val entities: Array<KClass<*>> = []
+    )
+    """.trimIndent(),
+  )
 }
