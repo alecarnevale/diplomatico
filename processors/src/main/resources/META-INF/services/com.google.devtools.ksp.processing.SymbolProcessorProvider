@@ -1,1 +1,1 @@
-com.alecarnevale.diplomatico.providers.AutoIncrementRoomDBVersionProcessorProvider
+com.alecarnevale.diplomatico.providers.HashingRoomDBVersionProcessorProvider

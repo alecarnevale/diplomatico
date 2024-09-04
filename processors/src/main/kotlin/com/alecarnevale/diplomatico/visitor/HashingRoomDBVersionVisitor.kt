@@ -13,10 +13,10 @@ import java.util.Base64
 /**
  * Returns file content hash and fully qualified name of the specified class.
  */
-internal class AutoIncrementRoomDBVersionVisitor(
+internal class HashingRoomDBVersionVisitor(
   private val resolver: Resolver,
   private val logger: KSPLogger,
-) : KSEmptyVisitor<Unit, AutoIncrementRoomDBVersionVisitor.Output?>() {
+) : KSEmptyVisitor<Unit, HashingRoomDBVersionVisitor.Output?>() {
   override fun visitClassDeclaration(
     classDeclaration: KSClassDeclaration,
     data: Unit,
@@ -40,6 +40,8 @@ internal class AutoIncrementRoomDBVersionVisitor(
           resolver.getClassDeclarationByName(entityKsName)
         }
       }
+
+    // TODO: extends feature by computing hash also for nested classes
 
     val entitiesFilePath =
       entitiesClassDeclaration.map {

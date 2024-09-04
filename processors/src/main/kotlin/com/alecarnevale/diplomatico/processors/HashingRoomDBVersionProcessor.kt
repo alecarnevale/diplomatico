@@ -1,7 +1,7 @@
 package com.alecarnevale.diplomatico.processors
 
-import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
-import com.alecarnevale.diplomatico.visitor.AutoIncrementRoomDBVersionVisitor
+import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+import com.alecarnevale.diplomatico.visitor.HashingRoomDBVersionVisitor
 import com.google.devtools.ksp.containingFile
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
@@ -13,19 +13,19 @@ import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 
 /**
- * Process each [AutoIncrementRoomDBVersion] to generate a report.
+ * Process each [HashingRoomDBVersion] to generate a report.
  */
-internal class AutoIncrementRoomDBVersionProcessor(
+internal class HashingRoomDBVersionProcessor(
   private val logger: KSPLogger,
   private val codeGenerator: CodeGenerator,
 ) : SymbolProcessor {
-  private var outputs = listOf<AutoIncrementRoomDBVersionVisitor.Output>()
+  private var outputs = listOf<HashingRoomDBVersionVisitor.Output>()
   private var resolvedSymbols = setOf<KSAnnotated>()
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
-    val visitor = AutoIncrementRoomDBVersionVisitor(resolver = resolver, logger = logger)
+    val visitor = HashingRoomDBVersionVisitor(resolver = resolver, logger = logger)
 
-    val annotationName = AutoIncrementRoomDBVersion::class.qualifiedName ?: return emptyList()
+    val annotationName = HashingRoomDBVersion::class.qualifiedName ?: return emptyList()
 
     resolvedSymbols = resolver.getSymbolsWithAnnotation(annotationName).toSet()
 

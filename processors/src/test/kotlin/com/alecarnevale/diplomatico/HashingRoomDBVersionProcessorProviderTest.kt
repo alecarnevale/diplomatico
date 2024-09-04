@@ -1,6 +1,6 @@
 package com.alecarnevale.diplomatico
 
-import com.alecarnevale.diplomatico.providers.AutoIncrementRoomDBVersionProcessorProvider
+import com.alecarnevale.diplomatico.providers.HashingRoomDBVersionProcessorProvider
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.kspSourcesDir
@@ -10,18 +10,18 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCompilerApi::class)
-class AutoIncrementRoomDBVersionProcessorProviderTest {
+class HashingRoomDBVersionProcessorProviderTest {
   @Test
-  fun `GIVEN a class Foo without Database annotation WHEN @AutoIncrementRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
+  fun `GIVEN a class Foo without Database annotation WHEN @HashingRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
     val foo =
       SourceFile.kotlin(
         "Foo.kt",
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
         
-        @AutoIncrementRoomDBVersion
+        @HashingRoomDBVersion
         class Foo
         """.trimIndent(),
       )
@@ -34,7 +34,7 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
   }
 
   @Test
-  fun `GIVEN a class FooDatabase with Database annotation but no entities field WHEN @AutoIncrementRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
+  fun `GIVEN a class FooDatabase with Database annotation but no entities field WHEN @HashingRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
     val fooDatabase =
       SourceFile.kotlin(
         "FooDatabase.kt",
@@ -42,9 +42,9 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
         
-        @AutoIncrementRoomDBVersion
+        @HashingRoomDBVersion
         @Database
         class FooDatabase
         """.trimIndent(),
@@ -58,7 +58,7 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
   }
 
   @Test
-  fun `GIVEN a class Foo with Database annotation but empty entities field WHEN @AutoIncrementRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
+  fun `GIVEN a class Foo with Database annotation but empty entities field WHEN @HashingRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
     val fooDatabase =
       SourceFile.kotlin(
         "FooDatabase.kt",
@@ -66,9 +66,9 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
         
-        @AutoIncrementRoomDBVersion
+        @HashingRoomDBVersion
         @Database(entities = [])
         class FooDatabase
         """.trimIndent(),
@@ -82,7 +82,7 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
   }
 
   @Test
-  fun `GIVEN a class Foo with Database annotation and entities field WHEN @AutoIncrementRoomDBVersion is applied to Foo, THEN a report is generated`() {
+  fun `GIVEN a class Foo with Database annotation and entities field WHEN @HashingRoomDBVersion is applied to Foo, THEN a report is generated`() {
     val fooEntity =
       SourceFile.kotlin(
         "FooEntity.kt",
@@ -105,9 +105,9 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
         
-        @AutoIncrementRoomDBVersion
+        @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])
         class FooDatabase
         """.trimIndent(),
@@ -128,7 +128,7 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
   }
 
   @Test
-  fun `GIVEN a class Foo and a class Bar with Database annotation and entities field WHEN @AutoIncrementRoomDBVersion is applied to Foo and Bar, THEN a report is generated with 2 entry`() {
+  fun `GIVEN a class Foo and a class Bar with Database annotation and entities field WHEN @HashingRoomDBVersion is applied to Foo and Bar, THEN a report is generated with 2 entry`() {
     val fooEntity =
       SourceFile.kotlin(
         "FooEntity.kt",
@@ -151,9 +151,9 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
         
-        @AutoIncrementRoomDBVersion
+        @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])
         class FooDatabase
         """.trimIndent(),
@@ -196,9 +196,9 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.AutoIncrementRoomDBVersion
+        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
         
-        @AutoIncrementRoomDBVersion
+        @HashingRoomDBVersion
         @Database(entities = [BarEntity1::class, BarEntity2::class])
         class BarDatabase
         """.trimIndent(),
@@ -223,7 +223,7 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
     val kotlinCompilation =
       KotlinCompilation().apply {
         sources = sourceFiles.toMutableList().apply { add(databaseAnnotation) }
-        symbolProcessorProviders = listOf(AutoIncrementRoomDBVersionProcessorProvider())
+        symbolProcessorProviders = listOf(HashingRoomDBVersionProcessorProvider())
         inheritClassPath = true
       }
     return KspCompilationResult(

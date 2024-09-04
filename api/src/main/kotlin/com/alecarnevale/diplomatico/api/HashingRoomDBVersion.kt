@@ -6,4 +6,4 @@ package com.alecarnevale.diplomatico.api
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
-annotation class AutoIncrementRoomDBVersion
+annotation class HashingRoomDBVersion
