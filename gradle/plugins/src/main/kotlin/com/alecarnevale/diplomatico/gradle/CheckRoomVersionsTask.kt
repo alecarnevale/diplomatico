@@ -8,9 +8,9 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 /**
- * This task check that the two report files contains the same output (sha,name) for each entity.
+ * This task check that the two report files contains the same output (name,sha) for each entity.
  */
-internal abstract class CheckRoomLevelsTask : DefaultTask() {
+internal abstract class CheckRoomVersionsTask : DefaultTask() {
   @get:InputFile
   abstract val buildReport: Property<File>
 

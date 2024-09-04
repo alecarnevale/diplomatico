@@ -10,10 +10,10 @@ internal class DiplomaticoPlugin : Plugin<Project> {
     target.dependencies.add("implementation", target.project(":api"))
     target.dependencies.add("ksp", target.project(":processors"))
 
-    target.tasks.register("checkRoomLevels", CheckRoomLevelsTask::class.java) {
+    target.tasks.register("checkRoomVersions", CheckRoomVersionsTask::class.java) {
       it.group = "diplomatico"
     }
-    target.tasks.named("checkRoomLevels", CheckRoomLevelsTask::class.java) {
+    target.tasks.named("checkRoomVersions", CheckRoomVersionsTask::class.java) {
       // TODO: release/dubug to be taken as input
       it.buildReport.convention(
         target.project.layout.buildDirectory
@@ -37,10 +37,10 @@ internal class DiplomaticoPlugin : Plugin<Project> {
       }
     }
 
-    target.tasks.register("updateRoomLevels", UpdateRoomLevelsTask::class.java) {
+    target.tasks.register("updateRoomVersions", UpdateRoomVersionsTask::class.java) {
       it.group = "diplomatico"
     }
-    target.tasks.named("updateRoomLevels", UpdateRoomLevelsTask::class.java) {
+    target.tasks.named("updateRoomVersions", UpdateRoomVersionsTask::class.java) {
       // TODO: release/dubug to be taken as input
       it.buildReport.convention(
         target.project.layout.buildDirectory
@@ -64,7 +64,7 @@ internal class DiplomaticoPlugin : Plugin<Project> {
 
     // TODO support debug/release
     target.tasks.named("assemble") {
-      it.finalizedBy(target.tasks.named("checkRoomLevels"))
+      it.finalizedBy(target.tasks.named("checkRoomVersions"))
     }
   }
 }

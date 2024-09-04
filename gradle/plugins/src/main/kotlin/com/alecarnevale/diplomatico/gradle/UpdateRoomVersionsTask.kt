@@ -9,7 +9,7 @@ import java.io.File
 /**
  * This task update the report file in the asset folder with entries contained in the build report.
  */
-internal abstract class UpdateRoomLevelsTask : DefaultTask() {
+internal abstract class UpdateRoomVersionsTask : DefaultTask() {
   @get:InputFile
   abstract val buildReport: Property<File>
 
