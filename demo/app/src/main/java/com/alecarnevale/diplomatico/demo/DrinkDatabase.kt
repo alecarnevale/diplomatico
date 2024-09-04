@@ -16,7 +16,7 @@ import com.alecarnevale.diplomatico.demo.drink.DrinkDao
 @HashingRoomDBVersion
 @Database(
   entities = [Drink::class, Cocktail::class],
-  version = 1,
+  version = 2,
 )
 @TypeConverters(
   BaseSpiritConverter::class,
