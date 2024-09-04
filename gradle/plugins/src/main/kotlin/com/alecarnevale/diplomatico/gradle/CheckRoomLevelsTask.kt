@@ -44,7 +44,7 @@ internal abstract class CheckRoomLevelsTask : DefaultTask() {
       }.toSet()
 
   private data class Output(
-    val hash: String,
     val qualifiedName: String,
+    val hash: String,
   )
 }

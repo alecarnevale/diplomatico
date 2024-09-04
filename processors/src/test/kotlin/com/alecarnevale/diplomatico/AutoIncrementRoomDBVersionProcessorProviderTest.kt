@@ -121,7 +121,7 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=,com.example.FooDatabase
+      com.example.FooDatabase,rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=
       
       """,
     )
@@ -212,8 +212,8 @@ class AutoIncrementRoomDBVersionProcessorProviderTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      OjhLbkbaR7D2Z5TUDoLt7Llsd/terCdAi1jI3pdMbuU=,com.example.BarDatabase
-      rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=,com.example.FooDatabase
+      com.example.BarDatabase,OjhLbkbaR7D2Z5TUDoLt7Llsd/terCdAi1jI3pdMbuU=
+      com.example.FooDatabase,rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=
       
       """,
     )

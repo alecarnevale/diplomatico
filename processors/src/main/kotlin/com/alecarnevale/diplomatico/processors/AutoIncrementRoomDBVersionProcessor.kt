@@ -54,7 +54,7 @@ internal class AutoIncrementRoomDBVersionProcessor(
       ).use { stream ->
         OutputStreamWriter(stream, StandardCharsets.UTF_8).use { writer ->
           outputs.forEach { output ->
-            writer.appendLine("${output.hash},${output.qualifiedName}")
+            writer.appendLine("${output.qualifiedName},${output.hash}")
           }
         }
       }

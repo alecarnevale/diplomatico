@@ -60,8 +60,8 @@ internal class AutoIncrementRoomDBVersionVisitor(
   }
 
   data class Output(
-    val hash: String,
     val qualifiedName: String,
+    val hash: String,
   )
 
   override fun defaultHandler(
