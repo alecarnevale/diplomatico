@@ -54,6 +54,7 @@ internal class DiplomaticoPlugin : Plugin<Project> {
           .file("src/main/assets/diplomatico/report.csv")
           .asFile
       if (!assetFile.exists()) {
+        assetFile.parentFile.mkdirs()
         assetFile.createNewFile()
       }
       it.assetReport.convention(
