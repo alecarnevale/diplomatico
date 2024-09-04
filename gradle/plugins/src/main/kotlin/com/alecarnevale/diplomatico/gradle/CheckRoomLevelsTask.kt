@@ -1,26 +1,41 @@
 package com.alecarnevale.diplomatico.gradle
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 /**
- * This task check that the two report file contains the same output (sha,name) for each entity.
+ * This task check that the two report files contains the same output (sha,name) for each entity.
  */
 internal abstract class CheckRoomLevelsTask : DefaultTask() {
+  @get:InputFile
+  abstract val buildReport: Property<File>
+
+  @get:InputFile
+  @get:Optional
+  abstract val assetReport: Property<File?>
+
   @TaskAction
   fun check() {
-    // TODO: release/dubug to be taken as input
-    val buildReport = project.layout.buildDirectory.file("generated/ksp/debug/resources/com/alecarnevale/diplomatico/results/report.csv")
-    // TODO: path of report file tracked with git could be optionally set in input
-    val assetReport = project.layout.projectDirectory.file("src/main/assets/diplomatico/report.csv")
+    val assertReportFile = assetReport.orNull
+    if (assertReportFile == null) {
+      logger.error(
+        "You are applying Diplomatico Gradle plugin, but no report file was found in the assets directory.\n" +
+          "If you want to start monitoring the generated report file, consider run updateRoomLevels to init the asset file.",
+      )
+      return
+    }
 
-    val reportAreTheSame = buildReport.get().asFile.getOutputs() == assetReport.asFile.getOutputs()
+    val reportAreTheSame = buildReport.get().getOutputs() == assertReportFile.getOutputs()
     if (!reportAreTheSame) {
       throw DifferentReportsException()
     }
   }
 
+  // TODO: probably not useful anymore
   private fun File.getOutputs(): Set<Output> =
     readLines()
       .map { line ->
