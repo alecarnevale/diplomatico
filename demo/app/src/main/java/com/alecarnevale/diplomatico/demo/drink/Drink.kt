@@ -6,4 +6,5 @@ import androidx.room.PrimaryKey
 @Entity
 internal data class Drink(
   @PrimaryKey val name: String,
+  val recipe: String = "",
 )
