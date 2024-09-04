@@ -1,8 +1,8 @@
 package com.alecarnevale.diplomatico.api
 
 /**
- * When annotates a Room Entity, a KSP processor is aware to generate a report
- * where store an incremental version of the corresponding Room database.
+ * When annotates a Room database, a KSP processor will generate an hash for it based on the entities stored.
+ * Hashes for each annotated databases are listed in the same report.
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
