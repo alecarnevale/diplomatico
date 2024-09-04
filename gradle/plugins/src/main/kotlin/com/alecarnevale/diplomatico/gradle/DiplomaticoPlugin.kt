@@ -66,5 +66,11 @@ internal class DiplomaticoPlugin : Plugin<Project> {
     target.tasks.named("assemble") {
       it.finalizedBy(target.tasks.named("checkRoomVersions"))
     }
+
+    // TODO support debug/release
+    target.tasks
+      .named("updateRoomVersions")
+      .get()
+      .dependsOn("kspDebugKotlin")
   }
 }
