@@ -72,12 +72,16 @@ Purpose of this checking phase is:
 ## 🎮 Demo
 Take a look at:
 - `:demo` module for a [sample usage](https://github.com/alecarnevale/diplomatico/tree/master/demo);
-- [Green PR]() that is ready to be merged, since no changes for entities have been found;
-- [Red PR]() that is failing, because a change has been introduce for an entity and so the versioned report is outdated.
+- [Red PR](https://github.com/alecarnevale/diplomatico/pull/8) that is failing because a change has been introduce for an entity and so the versioned report is outdated;
+- [Green PR](https://github.com/alecarnevale/diplomatico/pull/9) that is ready to be merged because after changing the entity it also updated the versioned report.
 
 ## 🛠️ Installation
 
-TBD (gradle plugin + KSP processor)
+**WIP**
+
+To start tracking the report in your project, you can use the `updateRoomVersions` Gradle task.
+It will make a copy of the last generated report in the asset folder of your project.
+Take a look at [this PR](https://github.com/alecarnevale/diplomatico/pull/7) for an example.
 
 ## 🙏 Thanks to
 - Kotlin Compile Testing https://github.com/tschuchortdev/kotlin-compile-testing
