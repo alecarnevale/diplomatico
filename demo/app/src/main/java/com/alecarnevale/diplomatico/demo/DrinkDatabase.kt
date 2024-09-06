@@ -9,7 +9,7 @@ import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
 @HashingRoomDBVersion
 @Database(
   entities = [Drink::class],
-  version = 1,
+  version = 2,
 )
 internal abstract class DrinkDatabase : RoomDatabase() {
   abstract fun drinkDao(): DrinkDao
