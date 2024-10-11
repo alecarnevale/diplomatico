@@ -1,4 +1,4 @@
-# 🗡️ DIPLOMATICO
+# 🥃 DIPLOMATICO
 
 > _You drank a lot of rum and forgot to update DB versions of your Room_.
 
@@ -69,11 +69,16 @@ Purpose of this checking phase is:
 - so developers can update Room Database's version, if needed;
 - then accept the new generated report (you can use `updateRoomVersions` Gradle task).
 
+### Feature
+- support for nested classes: KSP processor check for any class nested in entity classes.
+
 ## 🎮 Demo
 Take a look at:
 - `:demo` module for a [sample usage](https://github.com/alecarnevale/diplomatico/tree/master/demo);
 - [Red PR](https://github.com/alecarnevale/diplomatico/pull/8) that is failing because a change has been introduce for an entity and so the versioned report is outdated;
 - [Green PR](https://github.com/alecarnevale/diplomatico/pull/9) that is ready to be merged because after changing the entity it also updated the versioned report.
+- [Red PR - nested classes](https://github.com/alecarnevale/diplomatico/pull/26) that is failing because a change has been introduce for a class that is nested in a field of an entity and so the versioned report is outdated;
+- [Green PR - nested classes](https://github.com/alecarnevale/diplomatico/pull/27) that is ready to be merged because after changing a class that is nested in a field of an entity it also updated the versioned report.
 
 ## 🛠️ Installation
 
