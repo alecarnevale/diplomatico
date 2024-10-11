@@ -188,4 +188,87 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
       """,
     )
   }
+
+  @Test
+  fun `GIVEN a class FooParent with a nested enum class FooChild and its FooDatabase, WHEN @HashingRoomDBVersion is applied to FooDatabase and a new enum value of FooChild appears, THEN hashing value in the report changes`() {
+    var fooChild =
+      SourceFile.kotlin(
+        "FooChild.kt",
+        """
+        package com.example
+
+        enum class FooChild {
+          X
+        }
+        """.trimIndent(),
+      )
+
+    val fooParent =
+      SourceFile.kotlin(
+        "FooParent.kt",
+        """
+        package com.example
+
+        import androidx.room.Entity
+        
+        @Entity
+        data class FooParent(
+          val x: FooChild,
+        )
+        """.trimIndent(),
+      )
+
+    val fooDatabase =
+      SourceFile.kotlin(
+        "FooDatabase.kt",
+        """
+        package com.example
+
+        import androidx.room.Database
+        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        
+        @HashingRoomDBVersion
+        @Database(entities = [FooParent::class])
+        class FooDatabase
+        """.trimIndent(),
+      )
+
+    var result = compileSourceFiles(fooChild, fooParent, fooDatabase)
+
+    assertEquals(KotlinCompilation.ExitCode.OK, result.result.exitCode)
+
+    result.assertGeneratedResources("com/alecarnevale/diplomatico/results/report.csv")
+    result.assertGeneratedContent(
+      "com/alecarnevale/diplomatico/results/report.csv",
+      """
+      com.example.FooDatabase,WsYkH1swYeY1fXKvfhDbLmiw5D8lQF5QiKV7r8AOy9M=
+      
+      """,
+    )
+
+    fooChild =
+      SourceFile.kotlin(
+        "FooChild.kt",
+        """
+        package com.example
+
+        enum class FooChild {
+          X, Y
+        }
+        """.trimIndent(),
+      )
+
+    result = compileSourceFiles(fooChild, fooParent, fooDatabase)
+
+    assertEquals(KotlinCompilation.ExitCode.OK, result.result.exitCode)
+
+    result.assertGeneratedResources("com/alecarnevale/diplomatico/results/report.csv")
+    result.assertGeneratedContent(
+      "com/alecarnevale/diplomatico/results/report.csv",
+      """
+      com.example.FooDatabase,gkbeOsr2pgHuYb26BQGfXrwwtoutD3Xx8x7+vpjdGYg=
+      
+      """,
+    )
+  }
 }
