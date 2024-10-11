@@ -1,6 +1,7 @@
 [versions]
 agp = "8.6.0"
 kotlin = "2.0.20"
+kotlinxSerialization = "1.7.3"
 kotlinter = "4.4.1"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -35,12 +36,14 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
 ksp-testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "ksp-testing" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 diplomatico = { id = "io.github.alecarnevale.diplomatico", version = "1.0" }
