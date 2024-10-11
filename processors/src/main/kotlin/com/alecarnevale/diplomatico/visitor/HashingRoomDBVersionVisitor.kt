@@ -99,13 +99,22 @@ internal class HashingRoomDBVersionVisitor(
 
   // extract path of other classes that is being references in this entity
   private fun KSClassDeclaration.resolveNestedEntitiesPath(): List<String> =
-    declarations.toList().filterIsInstance<KSPropertyDeclaration>().mapNotNull { property ->
-      property.resolveFilePath()
-    }
+    declarations
+      .toList()
+      .filterIsInstance<KSPropertyDeclaration>()
+      .flatMap { property ->
+        property.resolveFilePath()
+      }.filterNotNull()
 
   // return the file path of this declaration, if it's not a built-in type
-  private fun KSPropertyDeclaration.resolveFilePath(): String? =
-    type.resolve().declaration.qualifiedName?.let {
-      resolver.getClassDeclarationByName(it)?.containingFile?.filePath
+  private fun KSPropertyDeclaration.resolveFilePath(): List<String?> {
+    val classDeclaration =
+      type.resolve().declaration.qualifiedName?.let {
+        resolver.getClassDeclarationByName(it)
+      }
+    // return this file path (if not null) + any other file path discovered with this as root
+    return with(classDeclaration) {
+      this?.resolveNestedEntitiesPath()?.plus(this.containingFile?.filePath) ?: emptyList()
     }
+  }
 }
