@@ -4,6 +4,7 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSNode
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.visitor.KSEmptyVisitor
 import java.io.File
@@ -41,13 +42,23 @@ internal class HashingRoomDBVersionVisitor(
         }
       }
 
-    // TODO: extends feature by computing hash also for nested classes
-
     val entitiesFilePath =
       entitiesClassDeclaration.map {
         it.containingFile!!.filePath
       }
-    val hash = entitiesFilePath.map { hashingFile(it) }.merge()
+    // retrieve file path of nested classes for each entity
+    val nestedClassesFilePath =
+      entitiesClassDeclaration.flatMap { entity ->
+        entity.resolveNestedEntitiesPath()
+      }
+
+    val hash =
+      entitiesFilePath
+        .map { hashingFile(it) }
+        // concat entities' hashes with its nested class' hashes
+        .plus(nestedClassesFilePath.map { hashingFile(it) })
+        // generate a single String starting many ones
+        .merge()
 
     val qualifiedName = classDeclaration.qualifiedName?.asString()
     if (qualifiedName == null) {
@@ -83,6 +94,28 @@ internal class HashingRoomDBVersionVisitor(
       }
     return with(MessageDigest.getInstance("SHA-256").digest(hashesByteArray)) {
       Base64.getEncoder().encodeToString(this)
+    }
+  }
+
+  // extract path of other classes that is being references in this entity (or class when call recursively)
+  private fun KSClassDeclaration.resolveNestedEntitiesPath(): List<String> =
+    declarations
+      .toList()
+      .filterIsInstance<KSPropertyDeclaration>()
+      .flatMap { property ->
+        property.resolveFilePath()
+      }.filterNotNull()
+
+  // return the file path of this declaration, if it's not a primitive type
+  private fun KSPropertyDeclaration.resolveFilePath(): List<String?> {
+    val classDeclaration =
+      type.resolve().declaration.qualifiedName?.let {
+        // when resolving a primitive type (Int, String...) null is returned
+        resolver.getClassDeclarationByName(it)
+      }
+    // return this file path (if not null) + any other file path discovered with this as root
+    return with(classDeclaration) {
+      this?.resolveNestedEntitiesPath()?.plus(this.containingFile?.filePath) ?: emptyList()
     }
   }
 }

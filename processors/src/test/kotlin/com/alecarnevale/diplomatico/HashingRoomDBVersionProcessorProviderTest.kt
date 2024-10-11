@@ -1,16 +1,13 @@
 package com.alecarnevale.diplomatico
 
-import com.alecarnevale.diplomatico.providers.HashingRoomDBVersionProcessorProvider
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspSourcesDir
-import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCompilerApi::class)
-class HashingRoomDBVersionProcessorProviderTest {
+internal class HashingRoomDBVersionProcessorProviderTest {
   @Test
   fun `GIVEN a class Foo without Database annotation WHEN @HashingRoomDBVersion is applied to Foo, THEN compilation error and no report is not generated`() {
     val foo =
@@ -219,31 +216,78 @@ class HashingRoomDBVersionProcessorProviderTest {
     )
   }
 
-  private fun compileSourceFiles(vararg sourceFiles: SourceFile): KspCompilationResult {
-    val kotlinCompilation =
-      KotlinCompilation().apply {
-        sources = sourceFiles.toMutableList().apply { add(databaseAnnotation) }
-        symbolProcessorProviders = listOf(HashingRoomDBVersionProcessorProvider())
-        inheritClassPath = true
-      }
-    return KspCompilationResult(
-      sourcesDir = kotlinCompilation.kspSourcesDir,
-      result = kotlinCompilation.compile(),
+  @Test
+  fun `GIVEN a class Foo with Database annotation and entities field WHEN @HashingRoomDBVersion is applied to Foo but Foo changes, THEN reports generated change`() {
+    var fooEntity =
+      SourceFile.kotlin(
+        "FooEntity.kt",
+        """
+        package com.example
+
+        import androidx.room.Entity
+        
+        @Entity
+        data class FooEntity(
+          val x: Int,
+        )
+        """.trimIndent(),
+      )
+
+    val fooDatabase =
+      SourceFile.kotlin(
+        "FooDatabase.kt",
+        """
+        package com.example
+
+        import androidx.room.Database
+        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        
+        @HashingRoomDBVersion
+        @Database(entities = [FooEntity::class])
+        class FooDatabase
+        """.trimIndent(),
+      )
+
+    var result = compileSourceFiles(fooEntity, fooDatabase)
+
+    assertEquals(KotlinCompilation.ExitCode.OK, result.result.exitCode)
+
+    result.assertGeneratedResources("com/alecarnevale/diplomatico/results/report.csv")
+    result.assertGeneratedContent(
+      "com/alecarnevale/diplomatico/results/report.csv",
+      """
+      com.example.FooDatabase,rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=
+      
+      """,
+    )
+
+    fooEntity =
+      SourceFile.kotlin(
+        "FooEntity.kt",
+        """
+        package com.example
+
+        import androidx.room.Entity
+        
+        @Entity
+        data class FooEntity(
+          val x: Int,
+          val y: String,
+        )
+        """.trimIndent(),
+      )
+
+    result = compileSourceFiles(fooEntity, fooDatabase)
+
+    assertEquals(KotlinCompilation.ExitCode.OK, result.result.exitCode)
+
+    result.assertGeneratedResources("com/alecarnevale/diplomatico/results/report.csv")
+    result.assertGeneratedContent(
+      "com/alecarnevale/diplomatico/results/report.csv",
+      """
+      com.example.FooDatabase,NyNDpYWpN9vFEOcaDrAI7JLXXA6MgaIKN1TLQQ7m/ms=
+      
+      """,
     )
   }
-}
-
-// we mirror Room Database annotation just for testing purpose
-// otherwise it couldn't possible access its argument
-private val databaseAnnotation by lazy {
-  SourceFile.kotlin(
-    "Database.kt",
-    """
-    package androidx.room
-
-    annotation class Database(
-      val entities: Array<KClass<*>> = []
-    )
-    """.trimIndent(),
-  )
 }
