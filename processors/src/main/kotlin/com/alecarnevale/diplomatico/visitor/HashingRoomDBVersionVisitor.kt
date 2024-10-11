@@ -4,6 +4,7 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSNode
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.visitor.KSEmptyVisitor
 import java.io.File
@@ -41,13 +42,23 @@ internal class HashingRoomDBVersionVisitor(
         }
       }
 
-    // TODO: extends feature by computing hash also for nested classes
-
     val entitiesFilePath =
       entitiesClassDeclaration.map {
         it.containingFile!!.filePath
       }
-    val hash = entitiesFilePath.map { hashingFile(it) }.merge()
+    // retrieve file path of nested classes for each entity
+    val nestedClassesFilePath =
+      entitiesClassDeclaration.flatMap { entity ->
+        entity.resolveNestedEntitiesPath()
+      }
+
+    val hash =
+      entitiesFilePath
+        .map { hashingFile(it) }
+        // contact entities hashes with its nested class hashes
+        .plus(nestedClassesFilePath.map { hashingFile(it) })
+        // generate a single String from many ones
+        .merge()
 
     val qualifiedName = classDeclaration.qualifiedName?.asString()
     if (qualifiedName == null) {
@@ -85,4 +96,16 @@ internal class HashingRoomDBVersionVisitor(
       Base64.getEncoder().encodeToString(this)
     }
   }
+
+  // extract path of other classes that is being references in this entity
+  private fun KSClassDeclaration.resolveNestedEntitiesPath(): List<String> =
+    declarations.toList().filterIsInstance<KSPropertyDeclaration>().mapNotNull { property ->
+      property.resolveFilePath()
+    }
+
+  // return the file path of this declaration, if it's not a built-in type
+  private fun KSPropertyDeclaration.resolveFilePath(): String? =
+    type.resolve().declaration.qualifiedName?.let {
+      resolver.getClassDeclarationByName(it)?.containingFile?.filePath
+    }
 }
