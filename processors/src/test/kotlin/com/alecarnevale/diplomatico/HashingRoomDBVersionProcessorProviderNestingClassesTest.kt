@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-// Test suite for specific to cover nesting classes case
+// Test suite to cover only nesting classes cases
 @OptIn(ExperimentalCompilerApi::class)
 internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
   @Test

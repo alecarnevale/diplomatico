@@ -55,9 +55,9 @@ internal class HashingRoomDBVersionVisitor(
     val hash =
       entitiesFilePath
         .map { hashingFile(it) }
-        // contact entities hashes with its nested class hashes
+        // concat entities' hashes with its nested class' hashes
         .plus(nestedClassesFilePath.map { hashingFile(it) })
-        // generate a single String from many ones
+        // generate a single String starting many ones
         .merge()
 
     val qualifiedName = classDeclaration.qualifiedName?.asString()
@@ -97,7 +97,7 @@ internal class HashingRoomDBVersionVisitor(
     }
   }
 
-  // extract path of other classes that is being references in this entity
+  // extract path of other classes that is being references in this entity (or class when call recursively)
   private fun KSClassDeclaration.resolveNestedEntitiesPath(): List<String> =
     declarations
       .toList()
@@ -106,10 +106,11 @@ internal class HashingRoomDBVersionVisitor(
         property.resolveFilePath()
       }.filterNotNull()
 
-  // return the file path of this declaration, if it's not a built-in type
+  // return the file path of this declaration, if it's not a primitive type
   private fun KSPropertyDeclaration.resolveFilePath(): List<String?> {
     val classDeclaration =
       type.resolve().declaration.qualifiedName?.let {
+        // when resolving a primitive type (Int, String...) null is returned
         resolver.getClassDeclarationByName(it)
       }
     // return this file path (if not null) + any other file path discovered with this as root
