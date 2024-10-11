@@ -25,9 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alecarnevale.diplomatico.demo.cocktail.BaseSpirit
+import com.alecarnevale.diplomatico.demo.cocktail.Cocktail
+import com.alecarnevale.diplomatico.demo.cocktail.Distilled
 import com.alecarnevale.diplomatico.demo.drink.Drink
 import com.alecarnevale.diplomatico.demo.ui.theme.DiplomaticoTheme
-import kotlin.random.Random
 
 internal class MainActivity : ComponentActivity() {
   private val drinkDatabase: DrinkDatabase
@@ -38,18 +40,36 @@ internal class MainActivity : ComponentActivity() {
     enableEdgeToEdge()
     setContent {
       val drinks by drinkDatabase.drinkDao().getAll().observeAsState(emptyList())
+      val cocktails by drinkDatabase.cocktailDao().getAll().observeAsState(emptyList())
 
       DiplomaticoTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
           MainContent(
             drinks = drinks,
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            cocktails = cocktails,
+            modifier =
+              Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
           )
         }
       }
 
       LaunchedEffect(key1 = Unit) {
-        drinkDatabase.drinkDao().insertDrink(Drink(name = "Rum #${Random.nextInt()}"))
+        drinkDatabase.drinkDao().insertDrink(Drink(name = "Rum"))
+        drinkDatabase.cocktailDao().insertCocktail(
+          Cocktail(
+            name = "Cuba Libre",
+            bseSpirit =
+              BaseSpirit(
+                name = "Rum",
+                distilled =
+                  Distilled(
+                    name = "Sugarcane",
+                  ),
+              ),
+          ),
+        )
       }
     }
   }
@@ -58,6 +78,7 @@ internal class MainActivity : ComponentActivity() {
 @Composable
 private fun MainContent(
   drinks: List<Drink>,
+  cocktails: List<Cocktail>,
   modifier: Modifier = Modifier,
 ) {
   LazyColumn(
@@ -75,6 +96,15 @@ private fun MainContent(
       }
       Spacer(modifier = Modifier.height(10.dp))
     }
+    items(cocktails) { cocktail ->
+      Spacer(modifier = Modifier.height(10.dp))
+      Card(
+        border = BorderStroke(width = 1.dp, color = Color.Black),
+      ) {
+        Text(text = cocktail.name, modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp))
+      }
+      Spacer(modifier = Modifier.height(10.dp))
+    }
   }
 }
 
@@ -87,6 +117,19 @@ private fun GreetingPreview() {
         Drink("Diplomatico"),
         Drink("Zacapa"),
         Drink("Kraken"),
+      ),
+      listOf(
+        Cocktail(
+          name = "Cuba Libre",
+          bseSpirit =
+            BaseSpirit(
+              name = "Rum",
+              distilled =
+                Distilled(
+                  name = "Sugarcane",
+                ),
+            ),
+        ),
       ),
     )
   }
