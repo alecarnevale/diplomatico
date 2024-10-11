@@ -1,4 +1,4 @@
-package com.alecarnevale.diplomatico.demo
+package com.alecarnevale.diplomatico.demo.drink
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

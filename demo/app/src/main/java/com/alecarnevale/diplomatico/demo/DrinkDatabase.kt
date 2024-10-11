@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+import com.alecarnevale.diplomatico.demo.drink.Drink
+import com.alecarnevale.diplomatico.demo.drink.DrinkDao
 
 @HashingRoomDBVersion
 @Database(
