@@ -22,23 +22,23 @@ internal class HashingRoomDBVersionProcessor(
   private val codeGenerator: CodeGenerator,
 ) : SymbolProcessor {
   private var outputs = mutableListOf<HashingOutput.Output>()
-  private var resolvedSymbols = setOf<KSAnnotated>()
+  private var databaseResolvedSymbols = setOf<KSAnnotated>()
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
     val visitor = HashingRoomDBVersionVisitor(resolver = resolver, logger = logger)
 
-    val annotationName = HashingRoomDBVersion::class.qualifiedName ?: return emptyList()
+    val annotationNameForDatabase = HashingRoomDBVersion::class.qualifiedName ?: return emptyList()
 
-    resolvedSymbols = resolver.getSymbolsWithAnnotation(annotationName).toSet()
+    databaseResolvedSymbols = resolver.getSymbolsWithAnnotation(annotationNameForDatabase).toSet()
 
-    if (resolvedSymbols.isEmpty()) {
+    if (databaseResolvedSymbols.isEmpty()) {
       return emptyList()
     }
 
     // retrieve the set of entities (with their transitive) for each Room database annotated with HashingRoomDBVersion
     val entitiesForDatabase =
       mutableMapOf<KSAnnotated, Set<KSClassDeclaration>>().apply {
-        resolvedSymbols.forEach { roomDB ->
+        databaseResolvedSymbols.forEach { roomDB ->
           roomDB.accept(visitor, Unit)?.let {
             this[roomDB] = it
           }
@@ -62,7 +62,7 @@ internal class HashingRoomDBVersionProcessor(
         dependencies =
           Dependencies(
             aggregating = false,
-            sources = resolvedSymbols.mapNotNull { it.containingFile }.toTypedArray(),
+            sources = databaseResolvedSymbols.mapNotNull { it.containingFile }.toTypedArray(),
           ),
         path = "com/alecarnevale/diplomatico/results/report",
         extensionName = "csv",
