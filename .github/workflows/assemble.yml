@@ -19,6 +19,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: Run build processor task
+        run: ./gradlew :processors:build
       - name: Run Android assemble task
         run: ./gradlew :demo:app:assemble
 
