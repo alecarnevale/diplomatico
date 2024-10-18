@@ -2,6 +2,7 @@ package com.alecarnevale.diplomatico.processors
 
 import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
 import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+import com.alecarnevale.diplomatico.validators.HashingRoomDBVersionValidator
 import com.alecarnevale.diplomatico.visitor.ContributesRoomDBVersionVisitor
 import com.alecarnevale.diplomatico.visitor.HashingOutput
 import com.alecarnevale.diplomatico.visitor.HashingRoomDBVersionVisitor
@@ -24,7 +25,7 @@ internal class HashingRoomDBVersionProcessor(
   private val codeGenerator: CodeGenerator,
 ) : SymbolProcessor {
   private var outputs = mutableListOf<HashingOutput.Output>()
-  private var databaseResolvedSymbols = setOf<KSAnnotated>()
+  private var databaseResolvedClasses = setOf<KSClassDeclaration>()
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
     val databasesVisitor = HashingRoomDBVersionVisitor(resolver = resolver, logger = logger)
@@ -32,12 +33,12 @@ internal class HashingRoomDBVersionProcessor(
 
     val annotationNameForDatabase = HashingRoomDBVersion::class.qualifiedName ?: return emptyList()
 
-    databaseResolvedSymbols = resolver.getSymbolsWithAnnotation(annotationNameForDatabase).toSet()
-    // TODO add validation phase, so casting to KSClassDeclaration will be safer
-
+    val databaseResolvedSymbols = resolver.getSymbolsWithAnnotation(annotationNameForDatabase).toSet()
     if (databaseResolvedSymbols.isEmpty()) {
       return emptyList()
     }
+    val databaseSymbolsValidator = HashingRoomDBVersionValidator(logger)
+    databaseResolvedClasses = databaseResolvedSymbols.mapNotNull { databaseSymbolsValidator.validate(it) }.toSet()
 
     val annotationNameForEntities = ContributesRoomDBVersion::class.qualifiedName ?: return emptyList()
 
@@ -53,9 +54,7 @@ internal class HashingRoomDBVersionProcessor(
     // retrieve the set of entities (with their transitive) for each Room database annotated with HashingRoomDBVersion
     val entitiesForDatabase =
       mutableMapOf<KSClassDeclaration, Set<KSClassDeclaration>>().apply {
-        databaseResolvedSymbols.forEach { roomDB ->
-          // TODO this cast maybe temporary, until validation phase is added
-          roomDB as KSClassDeclaration
+        databaseResolvedClasses.forEach { roomDB ->
           roomDB.accept(databasesVisitor, Unit)?.let {
             this[roomDB] = it
           }
@@ -82,7 +81,7 @@ internal class HashingRoomDBVersionProcessor(
         dependencies =
           Dependencies(
             aggregating = false,
-            sources = databaseResolvedSymbols.mapNotNull { it.containingFile }.toTypedArray(),
+            sources = databaseResolvedClasses.mapNotNull { it.containingFile }.toTypedArray(),
           ),
         path = "com/alecarnevale/diplomatico/results/report",
         extensionName = "csv",
