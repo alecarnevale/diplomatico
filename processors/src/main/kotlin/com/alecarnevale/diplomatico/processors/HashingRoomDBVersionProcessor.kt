@@ -2,11 +2,11 @@ package com.alecarnevale.diplomatico.processors
 
 import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
 import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+import com.alecarnevale.diplomatico.validators.ContributesRoomDBVersionValidator
 import com.alecarnevale.diplomatico.validators.HashingRoomDBVersionValidator
 import com.alecarnevale.diplomatico.visitor.ContributesRoomDBVersionVisitor
 import com.alecarnevale.diplomatico.visitor.HashingOutput
 import com.alecarnevale.diplomatico.visitor.HashingRoomDBVersionVisitor
-import com.google.devtools.ksp.containingFile
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
@@ -30,6 +30,8 @@ internal class HashingRoomDBVersionProcessor(
   override fun process(resolver: Resolver): List<KSAnnotated> {
     val databasesVisitor = HashingRoomDBVersionVisitor(resolver = resolver, logger = logger)
     val contributesVisitor = ContributesRoomDBVersionVisitor(resolver = resolver, logger = logger)
+    val databaseSymbolsValidator = HashingRoomDBVersionValidator(logger)
+    val contributesSymbolsValidator = ContributesRoomDBVersionValidator(logger)
 
     val annotationNameForDatabase = HashingRoomDBVersion::class.qualifiedName ?: return emptyList()
 
@@ -37,18 +39,22 @@ internal class HashingRoomDBVersionProcessor(
     if (databaseResolvedSymbols.isEmpty()) {
       return emptyList()
     }
-    val databaseSymbolsValidator = HashingRoomDBVersionValidator(logger)
     databaseResolvedClasses = databaseResolvedSymbols.mapNotNull { databaseSymbolsValidator.validate(it) }.toSet()
 
     val annotationNameForEntities = ContributesRoomDBVersion::class.qualifiedName ?: return emptyList()
 
     // gather all entities that are contributing for a database
-    val contributesEntities = resolver.getSymbolsWithAnnotation(annotationNameForEntities).toSet()
-    // TODO add validation phase, so we can convert List<KSAnnotated> as List<KSClassDeclaration>
-    val contributesEntitiesForDatabase: Map<KSClassDeclaration?, List<KSAnnotated>> =
-      contributesEntities.groupBy { entity ->
-        // grouping by database class extracted from the argument ContributesRoomDBVersion::roomDB
-        entity.accept(contributesVisitor, Unit)
+    val contributesEntitiesSymbols = resolver.getSymbolsWithAnnotation(annotationNameForEntities)
+    val contributesEntitiesClasses = contributesEntitiesSymbols.mapNotNull { contributesSymbolsValidator.validate(it) }
+    val contributesEntitiesForDatabase: Map<KSClassDeclaration, Set<KSClassDeclaration>> =
+      mutableMapOf<KSClassDeclaration, Set<KSClassDeclaration>>().apply {
+        contributesEntitiesClasses
+          .groupBy { entity ->
+            // grouping by database class extracted from the argument ContributesRoomDBVersion::roomDB
+            entity.accept(contributesVisitor, Unit) as KSClassDeclaration
+          }.forEach { (key, value) ->
+            this[key] = value.toSet()
+          }
       }
 
     // retrieve the set of entities (with their transitive) for each Room database annotated with HashingRoomDBVersion
@@ -62,11 +68,11 @@ internal class HashingRoomDBVersionProcessor(
       }
 
     // for each database, merge their entities with the contributes already discovered
-    // TODO
+    val mergedEntities: Map<KSClassDeclaration, Set<KSClassDeclaration>> = entitiesForDatabase + contributesEntitiesForDatabase
 
-    // generate an Output for each database, computing hash value from the set of entities found in the previous step
+    // generate an Output for each database, computing hash value from the set of entities (+ contributes + nested) found in the previous steps
     val hashingOutput = HashingOutput(resolver, logger)
-    entitiesForDatabase.entries.forEach {
+    mergedEntities.entries.forEach {
       hashingOutput.generate(it.key, it.value)?.let { output ->
         outputs.add(output)
       }
