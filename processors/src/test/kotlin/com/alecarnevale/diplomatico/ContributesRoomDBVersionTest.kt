@@ -80,7 +80,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,PbsZleT17v4mrPd1sMuKSvMKwu8Dj4J8iwxd8wBswFU=
+      com.example.BarDatabase,Ca1ipokz9aM1frZdoZvny2JBnXG/uupLU/L/guJcacM=
       
       """,
     )
@@ -110,7 +110,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,yZQQbCjuGB293KdFU+7/ZJ6fRfkzzcF9+/ZDVz0dTU0=
+      com.example.BarDatabase,7rxoYLX1cg4rXv8bt72ACyjnPDNd0vQbtQiyomVXyjQ=
       
       """,
     )
@@ -184,7 +184,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,kjddYyYByfhBr7R85oeN70508A9ymp939ZacOxGpYkg=
+      com.example.BarDatabase,UNc/khXpR0vSnCzefOVV3x0RKOcNgsm4uOb+0AtcWko=
       
       """,
     )
@@ -211,7 +211,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,GF1J+oaU5xxRm6nwkYRqLkUegry2vlF1DDcR3rdl/JQ=
+      com.example.BarDatabase,i1HNIf2IKRAQq82z3KZSSwoDoBpM/ZekEee+4ZGET54=
       
       """,
     )
@@ -341,8 +341,8 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.BarDatabase,xLiHL73pNM4H5nEFXj91VFYddZXL0ZT63xN3jrWQdPE=
-        com.example.FooDatabase,UjGzenA9bmXBUajTnFXhwAXaIgYHfVoYtDGHg69EXoA=
+        com.example.BarDatabase,N4w+9bOiBO5H8lnV1N/lNydU4Ea7JLukzX7hybPnszQ=
+        com.example.FooDatabase,cI5RWIS4pdCkRqBFDrsoF3QSAfbRxYjr3N1ss0Xamdo=
       
       """,
     )
@@ -369,8 +369,8 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.BarDatabase,xLiHL73pNM4H5nEFXj91VFYddZXL0ZT63xN3jrWQdPE=
-        com.example.FooDatabase,OdbVFva8iHMuyKSCzcGlciYGsQrWy3WqDTfYdPPGQ6o=
+        com.example.BarDatabase,N4w+9bOiBO5H8lnV1N/lNydU4Ea7JLukzX7hybPnszQ=
+        com.example.FooDatabase,1RH+e+UF9smlGSoyPtBoQMdKGRomgw/Anjt598me14Q=
       
       """,
     )
@@ -397,8 +397,98 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.BarDatabase,7QN+Vju1AjqDF5CihalezTin3T/PfxfaoVd9H4x1a5U=
-        com.example.FooDatabase,OdbVFva8iHMuyKSCzcGlciYGsQrWy3WqDTfYdPPGQ6o=
+        com.example.BarDatabase,1tqYFpBmDzQmb1mU+2Z9CxmzTTy7UUCwhFphfBBbK/k=
+        com.example.FooDatabase,1RH+e+UF9smlGSoyPtBoQMdKGRomgw/Anjt598me14Q=
+      
+      """,
+    )
+  }
+
+  @Test
+  fun `GIVEN a FooEntity for a database FooDatabase annotated with @HashingRoomDBVersion and an plain class Foo annotated with @ContributesRoomDBVersion, WHEN a change for Foo appears, THEN the report is updated even if FooEntity didn't change`() {
+    var fooEntity =
+      SourceFile.kotlin(
+        "FooEntity.kt",
+        """
+        package com.example
+
+        import androidx.room.Entity
+        
+        @Entity
+        data class FooEntity(
+          val x: Int,
+        )
+        """.trimIndent(),
+      )
+
+    val foo =
+      SourceFile.kotlin(
+        "Foo.kt",
+        """
+        package com.example
+
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
+
+        @ContributesRoomDBVersion(roomDB = FooDatabase::class)
+        data class Foo(
+          val x: Int,
+        )
+        """.trimIndent(),
+      )
+
+    val fooDatabase =
+      SourceFile.kotlin(
+        "FooDatabase.kt",
+        """
+        package com.example
+
+        import androidx.room.Database
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
+        
+        @HashingRoomDBVersion
+        @Database(entities = [FooEntity::class])
+        abstract class FooDatabase
+        """.trimIndent(),
+      )
+
+    var result = compileSourceFiles(foo, fooEntity, fooDatabase)
+
+    assertEquals(KotlinCompilation.ExitCode.OK, result.result.exitCode)
+
+    result.assertGeneratedResources("com/alecarnevale/diplomatico/results/report.csv")
+    result.assertGeneratedContent(
+      "com/alecarnevale/diplomatico/results/report.csv",
+      """
+        com.example.FooDatabase,WPc7hJzl2lwuRhvC+6tN6nqrlg91zqwuhfqHsbNn86c=
+      
+      """,
+    )
+
+    fooEntity =
+      SourceFile.kotlin(
+        "FooEntity.kt",
+        """
+        package com.example
+
+        import androidx.room.Entity
+        
+        @Entity
+        data class FooEntity(
+          val x: Int,
+          val y: Int,
+        )
+        """.trimIndent(),
+      )
+
+    result = compileSourceFiles(foo, fooEntity, fooDatabase)
+
+    assertEquals(KotlinCompilation.ExitCode.OK, result.result.exitCode)
+
+    result.assertGeneratedResources("com/alecarnevale/diplomatico/results/report.csv")
+    result.assertGeneratedContent(
+      "com/alecarnevale/diplomatico/results/report.csv",
+      """
+        com.example.FooDatabase,5FX3v/br+vOTRegzl/BZ9QgpSn3psLn40T5QZ7fjC5I=
       
       """,
     )

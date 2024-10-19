@@ -68,7 +68,10 @@ internal class HashingRoomDBVersionProcessor(
       }
 
     // for each database, merge their entities with the contributes already discovered
-    val mergedEntities: Map<KSClassDeclaration, Set<KSClassDeclaration>> = entitiesForDatabase + contributesEntitiesForDatabase
+    val mergedEntities: Map<KSClassDeclaration, Set<KSClassDeclaration>> =
+      (entitiesForDatabase.keys + contributesEntitiesForDatabase.keys).associateWith { key ->
+        (entitiesForDatabase[key] ?: emptySet()) + (contributesEntitiesForDatabase[key] ?: emptySet())
+      }
 
     // generate an Output for each database, computing hash value from the set of entities (+ contributes + nested) found in the previous steps
     val hashingOutput = HashingOutput(resolver, logger)
