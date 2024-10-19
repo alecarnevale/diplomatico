@@ -22,7 +22,7 @@ import com.alecarnevale.diplomatico.demo.drink.DrinkDao
     Cocktail::class, // this is a showcase for the nested classes case: when there is a change in a nested class then the report must change
     BeverageEntity::class, // this is a showcase to make a plain class as part of the hashing function through ContributesRoomDBVersion annotation
   ],
-  version = 1,
+  version = 2,
 )
 @TypeConverters(
   BaseSpiritConverter::class,
