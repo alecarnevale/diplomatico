@@ -1,6 +1,6 @@
 package com.alecarnevale.diplomatico.visitor
 
-import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSClassDeclaration

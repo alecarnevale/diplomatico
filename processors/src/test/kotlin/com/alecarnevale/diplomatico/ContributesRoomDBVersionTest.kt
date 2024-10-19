@@ -34,7 +34,7 @@ internal class ContributesRoomDBVersionTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [BarEntity::class])
@@ -63,7 +63,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = BarDatabase::class)
         data class Foo(
@@ -92,7 +92,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = BarDatabase::class)
         data class Foo(
@@ -137,7 +137,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = BarDatabase::class)
         data class Foo(
@@ -168,7 +168,7 @@ internal class ContributesRoomDBVersionTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [BarEntity::class])
@@ -237,7 +237,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = FooDatabase::class)
         data class Foo(
@@ -268,7 +268,7 @@ internal class ContributesRoomDBVersionTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])
@@ -294,7 +294,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = BarDatabase::class)
         data class Bar(
@@ -325,7 +325,7 @@ internal class ContributesRoomDBVersionTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [BarEntity::class])

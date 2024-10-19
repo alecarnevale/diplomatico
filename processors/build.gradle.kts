@@ -7,7 +7,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":api"))
+    implementation(project(":annotations"))
 
     implementation(libs.ksp)
 

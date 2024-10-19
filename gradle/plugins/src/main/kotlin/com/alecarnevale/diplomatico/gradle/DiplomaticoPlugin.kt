@@ -9,7 +9,7 @@ import java.io.File
 // TODO: missing tests
 internal class DiplomaticoPlugin : Plugin<Project> {
   override fun apply(target: Project) {
-    target.dependencies.add("implementation", target.project(":api"))
+    target.dependencies.add("implementation", target.project(":annotations"))
     target.dependencies.add("ksp", target.project(":processors"))
 
     with(target.extensions.getByType(AndroidComponentsExtension::class.java)) {

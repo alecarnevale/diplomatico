@@ -1,4 +1,4 @@
-package com.alecarnevale.diplomatico.api
+package com.alecarnevale.diplomatico.annotations
 
 import kotlin.reflect.KClass
 

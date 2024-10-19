@@ -16,7 +16,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         class Foo
@@ -39,7 +39,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database
@@ -63,7 +63,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [])
@@ -102,7 +102,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])
@@ -148,7 +148,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])
@@ -193,7 +193,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [BarEntity1::class, BarEntity2::class])
@@ -240,7 +240,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])

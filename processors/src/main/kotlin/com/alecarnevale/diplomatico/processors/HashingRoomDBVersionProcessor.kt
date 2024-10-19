@@ -1,7 +1,7 @@
 package com.alecarnevale.diplomatico.processors
 
-import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
-import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
+import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
 import com.alecarnevale.diplomatico.validators.ContributesRoomDBVersionValidator
 import com.alecarnevale.diplomatico.validators.HashingRoomDBVersionValidator
 import com.alecarnevale.diplomatico.visitor.ContributesRoomDBVersionVisitor
