@@ -9,4 +9,5 @@ internal data class Beverage(
   val name: String,
   val isAlcoholic: Boolean,
   val brand: String,
+  val litre: Float = 0f,
 )
