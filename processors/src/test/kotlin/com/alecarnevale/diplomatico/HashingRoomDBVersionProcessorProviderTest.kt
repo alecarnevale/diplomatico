@@ -43,7 +43,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         
         @HashingRoomDBVersion
         @Database
-        class FooDatabase
+        abstract class FooDatabase
         """.trimIndent(),
       )
 
@@ -67,7 +67,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         
         @HashingRoomDBVersion
         @Database(entities = [])
-        class FooDatabase
+        abstract class FooDatabase
         """.trimIndent(),
       )
 
@@ -106,7 +106,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         
         @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])
-        class FooDatabase
+        abstract class FooDatabase
         """.trimIndent(),
       )
 
@@ -152,7 +152,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         
         @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])
-        class FooDatabase
+        abstract class FooDatabase
         """.trimIndent(),
       )
 
@@ -197,7 +197,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         
         @HashingRoomDBVersion
         @Database(entities = [BarEntity1::class, BarEntity2::class])
-        class BarDatabase
+        abstract class BarDatabase
         """.trimIndent(),
       )
 
@@ -244,7 +244,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
         
         @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])
-        class FooDatabase
+        abstract class FooDatabase
         """.trimIndent(),
       )
 

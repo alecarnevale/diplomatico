@@ -49,7 +49,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
         
         @HashingRoomDBVersion
         @Database(entities = [FooParent::class])
-        class FooDatabase
+        abstract class FooDatabase
         """.trimIndent(),
       )
 
@@ -145,7 +145,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
         
         @HashingRoomDBVersion
         @Database(entities = [FooParent::class])
-        class FooDatabase
+        abstract class FooDatabase
         """.trimIndent(),
       )
 
@@ -229,7 +229,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
         
         @HashingRoomDBVersion
         @Database(entities = [FooParent::class])
-        class FooDatabase
+        abstract class FooDatabase
         """.trimIndent(),
       )
 

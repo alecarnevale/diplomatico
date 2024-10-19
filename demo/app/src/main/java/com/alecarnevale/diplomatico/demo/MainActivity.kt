@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alecarnevale.diplomatico.demo.beverage.Beverage
+import com.alecarnevale.diplomatico.demo.beverage.repository.BeverageRepository
 import com.alecarnevale.diplomatico.demo.cocktail.BaseSpirit
 import com.alecarnevale.diplomatico.demo.cocktail.Cocktail
 import com.alecarnevale.diplomatico.demo.cocktail.Distilled
@@ -34,6 +37,9 @@ import com.alecarnevale.diplomatico.demo.ui.theme.DiplomaticoTheme
 internal class MainActivity : ComponentActivity() {
   private val drinkDatabase: DrinkDatabase
     get() = DrinkDatabaseProvider.get(this)
+  private val beverageRepository: BeverageRepository by lazy {
+    BeverageRepository(drinkDatabase.beverageEntityDao())
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -41,12 +47,14 @@ internal class MainActivity : ComponentActivity() {
     setContent {
       val drinks by drinkDatabase.drinkDao().getAll().observeAsState(emptyList())
       val cocktails by drinkDatabase.cocktailDao().getAll().observeAsState(emptyList())
+      val beverages by beverageRepository.getAll().observeAsState(emptyList())
 
       DiplomaticoTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
           MainContent(
             drinks = drinks,
             cocktails = cocktails,
+            beverages = beverages,
             modifier =
               Modifier
                 .fillMaxSize()
@@ -70,6 +78,13 @@ internal class MainActivity : ComponentActivity() {
               ),
           ),
         )
+        beverageRepository.insertBeverage(
+          Beverage(
+            name = "Coca-Cola",
+            isAlcoholic = false,
+            brand = "The Coca-Cola Company",
+          ),
+        )
       }
     }
   }
@@ -79,6 +94,7 @@ internal class MainActivity : ComponentActivity() {
 private fun MainContent(
   drinks: List<Drink>,
   cocktails: List<Cocktail>,
+  beverages: List<Beverage>,
   modifier: Modifier = Modifier,
 ) {
   LazyColumn(
@@ -105,6 +121,21 @@ private fun MainContent(
       }
       Spacer(modifier = Modifier.height(10.dp))
     }
+    items(beverages) { beverage ->
+      Spacer(modifier = Modifier.height(10.dp))
+      Card(
+        border = BorderStroke(width = 1.dp, color = Color.Black),
+      ) {
+        Column {
+          Text(text = "Name: ${beverage.name}", modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp))
+          Spacer(modifier = Modifier.height(5.dp))
+          Text(text = "Alcoholic: ${beverage.isAlcoholic}", modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp))
+          Spacer(modifier = Modifier.height(5.dp))
+          Text(text = "Brand: ${beverage.brand}", modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp))
+        }
+      }
+      Spacer(modifier = Modifier.height(10.dp))
+    }
   }
 }
 
@@ -113,24 +144,34 @@ private fun MainContent(
 private fun GreetingPreview() {
   DiplomaticoTheme {
     MainContent(
-      listOf(
-        Drink("Diplomatico"),
-        Drink("Zacapa"),
-        Drink("Kraken"),
-      ),
-      listOf(
-        Cocktail(
-          name = "Cuba Libre",
-          bseSpirit =
-            BaseSpirit(
-              name = "Rum",
-              distilled =
-                Distilled(
-                  name = "Sugarcane",
-                ),
-            ),
+      drinks =
+        listOf(
+          Drink("Diplomatico"),
+          Drink("Zacapa"),
+          Drink("Kraken"),
         ),
-      ),
+      cocktails =
+        listOf(
+          Cocktail(
+            name = "Cuba Libre",
+            bseSpirit =
+              BaseSpirit(
+                name = "Rum",
+                distilled =
+                  Distilled(
+                    name = "Sugarcane",
+                  ),
+              ),
+          ),
+        ),
+      beverages =
+        listOf(
+          Beverage(
+            name = "Coca-Cola",
+            isAlcoholic = false,
+            brand = "The Coca-Cola Company",
+          ),
+        ),
     )
   }
 }
