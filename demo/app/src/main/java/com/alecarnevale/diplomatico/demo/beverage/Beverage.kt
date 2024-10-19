@@ -1,6 +1,6 @@
 package com.alecarnevale.diplomatico.demo.beverage
 
-import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
 import com.alecarnevale.diplomatico.demo.DrinkDatabase
 import kotlinx.serialization.Serializable
 

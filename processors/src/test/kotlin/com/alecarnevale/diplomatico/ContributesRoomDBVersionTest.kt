@@ -34,7 +34,7 @@ internal class ContributesRoomDBVersionTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [BarEntity::class])
@@ -63,7 +63,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = BarDatabase::class)
         data class Foo(
@@ -80,7 +80,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,jnOTkF5wBvIKExhjW62JeXB3gz/3YHA7x9wUudWg/G0=
+      com.example.BarDatabase,PbsZleT17v4mrPd1sMuKSvMKwu8Dj4J8iwxd8wBswFU=
       
       """,
     )
@@ -92,7 +92,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = BarDatabase::class)
         data class Foo(
@@ -110,7 +110,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,BfOG2m3artfSMRBxbPn0cSfugbtEFCZxwpHLZjyOVps=
+      com.example.BarDatabase,yZQQbCjuGB293KdFU+7/ZJ6fRfkzzcF9+/ZDVz0dTU0=
       
       """,
     )
@@ -137,7 +137,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = BarDatabase::class)
         data class Foo(
@@ -168,7 +168,7 @@ internal class ContributesRoomDBVersionTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [BarEntity::class])
@@ -184,7 +184,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,5L6CXcYZRBLXaMjF/ZujjbxFeIu8+TC5YgHeYrs0Ox0=
+      com.example.BarDatabase,kjddYyYByfhBr7R85oeN70508A9ymp939ZacOxGpYkg=
       
       """,
     )
@@ -211,7 +211,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,vCwPzk3z1nRrN3DrTgv6tq3p+w9ugJfV1uKHbuw4daE=
+      com.example.BarDatabase,GF1J+oaU5xxRm6nwkYRqLkUegry2vlF1DDcR3rdl/JQ=
       
       """,
     )
@@ -237,7 +237,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = FooDatabase::class)
         data class Foo(
@@ -268,7 +268,7 @@ internal class ContributesRoomDBVersionTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [FooEntity::class])
@@ -294,7 +294,7 @@ internal class ContributesRoomDBVersionTest {
         """
         package com.example
 
-        import com.alecarnevale.diplomatico.api.ContributesRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
         
         @ContributesRoomDBVersion(roomDB = BarDatabase::class)
         data class Bar(
@@ -325,7 +325,7 @@ internal class ContributesRoomDBVersionTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [BarEntity::class])
@@ -341,8 +341,8 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.BarDatabase,CDawqU4uWygS+JMTLeo+y7kuRdz9fWg9GjgMPDrXLF4=
-        com.example.FooDatabase,L1V25UlgeMwLO5tf66+kjPBM4dXXQkTl+BJg2wB87CI=
+        com.example.BarDatabase,xLiHL73pNM4H5nEFXj91VFYddZXL0ZT63xN3jrWQdPE=
+        com.example.FooDatabase,UjGzenA9bmXBUajTnFXhwAXaIgYHfVoYtDGHg69EXoA=
       
       """,
     )
@@ -369,8 +369,8 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.BarDatabase,CDawqU4uWygS+JMTLeo+y7kuRdz9fWg9GjgMPDrXLF4=
-        com.example.FooDatabase,Gs69lcJkAEDz+aiCnFX8SW3N8cNslYLxLIGvu+CnnGk=
+        com.example.BarDatabase,xLiHL73pNM4H5nEFXj91VFYddZXL0ZT63xN3jrWQdPE=
+        com.example.FooDatabase,OdbVFva8iHMuyKSCzcGlciYGsQrWy3WqDTfYdPPGQ6o=
       
       """,
     )
@@ -397,8 +397,8 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.BarDatabase,6naDoQTi+NP/pS0Cbs37u8u92bBkvxvx1LjBOC7EhXc=
-        com.example.FooDatabase,Gs69lcJkAEDz+aiCnFX8SW3N8cNslYLxLIGvu+CnnGk=
+        com.example.BarDatabase,7QN+Vju1AjqDF5CihalezTin3T/PfxfaoVd9H4x1a5U=
+        com.example.FooDatabase,OdbVFva8iHMuyKSCzcGlciYGsQrWy3WqDTfYdPPGQ6o=
       
       """,
     )

@@ -75,6 +75,6 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     // applied automatically by gradle plugin
-    // implementation(project(":api"))
+    // implementation(project(":annotations"))
     // ksp(project(":processors"))
 }

@@ -17,6 +17,6 @@ rootProject.name = "diplomatico"
 
 includeBuild("gradle/plugins")
 
-include(":api")
+include(":annotations")
 include(":processors")
 include(":demo:app")

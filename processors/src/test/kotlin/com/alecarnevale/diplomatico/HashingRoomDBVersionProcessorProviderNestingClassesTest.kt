@@ -45,7 +45,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [FooParent::class])
@@ -141,7 +141,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [FooParent::class])
@@ -225,7 +225,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
         package com.example
 
         import androidx.room.Database
-        import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+        import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
         
         @HashingRoomDBVersion
         @Database(entities = [FooParent::class])

@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.alecarnevale.diplomatico.api.HashingRoomDBVersion
+import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
 import com.alecarnevale.diplomatico.demo.beverage.BeverageEntity
 import com.alecarnevale.diplomatico.demo.beverage.BeverageEntityDao
 import com.alecarnevale.diplomatico.demo.cocktail.Cocktail
