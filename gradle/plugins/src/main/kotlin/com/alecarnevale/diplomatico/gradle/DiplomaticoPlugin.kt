@@ -1,7 +1,9 @@
 package com.alecarnevale.diplomatico.gradle
 
+import com.android.build.api.variant.AndroidComponentsExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.internal.extensions.stdlib.capitalized
 import java.io.File
 
 // TODO: missing tests
@@ -10,20 +12,30 @@ internal class DiplomaticoPlugin : Plugin<Project> {
     target.dependencies.add("implementation", target.project(":api"))
     target.dependencies.add("ksp", target.project(":processors"))
 
-    target.tasks.register("checkRoomVersions", CheckRoomVersionsTask::class.java) {
+    with(target.extensions.getByType(AndroidComponentsExtension::class.java)) {
+      onVariants {
+        val buildVariant = "${it.flavorName}${it.buildType?.capitalized()}"
+        target.setupCheckRoomVersionsTask(buildVariant)
+        target.setupUpdateRoomVersionsTask(buildVariant)
+      }
+    }
+  }
+
+  private fun Project.setupCheckRoomVersionsTask(buildType: String) {
+    val taskName = "checkRoomVersions${buildType.capitalized()}"
+    tasks.register(taskName, CheckRoomVersionsTask::class.java) {
       it.group = "diplomatico"
     }
-    target.tasks.named("checkRoomVersions", CheckRoomVersionsTask::class.java) {
-      // TODO: release/dubug to be taken as input
+    tasks.named(taskName, CheckRoomVersionsTask::class.java) {
       it.buildReport.convention(
-        target.project.layout.buildDirectory
-          .file("generated/ksp/debug/resources/com/alecarnevale/diplomatico/results/report.csv")
+        project.layout.buildDirectory
+          .file("generated/ksp/$buildType/resources/com/alecarnevale/diplomatico/results/report.csv")
           .get()
           .asFile,
       )
       // TODO: path of report file tracked with git could be optionally set in input
       val assetFile =
-        target.project.layout.projectDirectory
+        project.layout.projectDirectory
           .file("src/main/assets/diplomatico/report.csv")
           .asFile
       if (!assetFile.exists()) {
@@ -37,20 +49,29 @@ internal class DiplomaticoPlugin : Plugin<Project> {
       }
     }
 
-    target.tasks.register("updateRoomVersions", UpdateRoomVersionsTask::class.java) {
+    tasks
+      .matching {
+        it.name.startsWith("assemble") && it.name.contains(buildType, ignoreCase = true)
+      }.all {
+        it.finalizedBy(tasks.named(taskName))
+      }
+  }
+
+  private fun Project.setupUpdateRoomVersionsTask(buildType: String) {
+    val taskName = "updateRoomVersions${buildType.capitalized()}"
+    tasks.register(taskName, UpdateRoomVersionsTask::class.java) {
       it.group = "diplomatico"
     }
-    target.tasks.named("updateRoomVersions", UpdateRoomVersionsTask::class.java) {
-      // TODO: release/dubug to be taken as input
+    tasks.named(taskName, UpdateRoomVersionsTask::class.java) {
       it.buildReport.convention(
-        target.project.layout.buildDirectory
-          .file("generated/ksp/debug/resources/com/alecarnevale/diplomatico/results/report.csv")
+        project.layout.buildDirectory
+          .file("generated/ksp/$buildType/resources/com/alecarnevale/diplomatico/results/report.csv")
           .get()
           .asFile,
       )
       // TODO: path of report file tracked with git could be optionally set in input
       val assetFile =
-        target.project.layout.projectDirectory
+        project.layout.projectDirectory
           .file("src/main/assets/diplomatico/report.csv")
           .asFile
       if (!assetFile.exists()) {
@@ -62,15 +83,11 @@ internal class DiplomaticoPlugin : Plugin<Project> {
       )
     }
 
-    // TODO support debug/release
-    target.tasks.named("assemble") {
-      it.finalizedBy(target.tasks.named("checkRoomVersions"))
-    }
-
-    // TODO support debug/release
-    target.tasks
-      .named("updateRoomVersions")
+    tasks
+      .named(taskName)
       .get()
-      .dependsOn("kspDebugKotlin")
+      .dependsOn(
+        tasks.matching { it.name.startsWith("ksp") },
+      )
   }
 }

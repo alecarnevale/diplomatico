@@ -1,5 +1,6 @@
 repositories {
     mavenCentral()
+    google()
 }
 
 plugins {
@@ -22,4 +23,8 @@ gradlePlugin {
             description = ""
         }
     }
+}
+
+dependencies {
+    implementation(libs.android.build.gradle.api)
 }

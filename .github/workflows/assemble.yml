@@ -22,5 +22,5 @@ jobs:
       - name: Run build processor task
         run: ./gradlew :processors:build
       - name: Run Android assemble task
-        run: ./gradlew :demo:app:assemble
+        run: ./gradlew :demo:app:assembleDemoDebug
 

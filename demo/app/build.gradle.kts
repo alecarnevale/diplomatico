@@ -30,6 +30,18 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+        debug {
+            isDebuggable = true
+        }
+    }
+    flavorDimensions += "version"
+    productFlavors {
+        create("demo") {
+            dimension = "version"
+        }
+        create("full") {
+            dimension = "version"
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
