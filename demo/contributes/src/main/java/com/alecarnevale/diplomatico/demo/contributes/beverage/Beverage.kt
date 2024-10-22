@@ -1,10 +1,9 @@
-package com.alecarnevale.diplomatico.demo.beverage
+package com.alecarnevale.diplomatico.demo.contributes.beverage
 
 import com.alecarnevale.diplomatico.annotations.ContributesRoomDBVersion
-import com.alecarnevale.diplomatico.demo.DrinkDatabase
 import kotlinx.serialization.Serializable
 
-@ContributesRoomDBVersion(roomDB = DrinkDatabase::class)
+@ContributesRoomDBVersion(roomDB = BeverageDatabase::class)
 @Serializable
 internal data class Beverage(
   val name: String,

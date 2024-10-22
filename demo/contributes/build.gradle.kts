@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
@@ -9,39 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.alecarnevale.diplomatico.demo"
+    namespace = "com.alecarnevale.diplomatico.demo.contributes"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.alecarnevale.diplomatico.demo"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-        debug {
-            isDebuggable = true
-        }
-    }
-    flavorDimensions += "version"
-    productFlavors {
-        create("demo") {
-            dimension = "version"
-        }
-        create("full") {
-            dimension = "version"
-        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -50,16 +22,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
-    implementation(project(":demo:contributes"))
-
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.compose.livedata)
     implementation(libs.androidx.core.ktx)
