@@ -1,4 +1,4 @@
-package com.alecarnevale.diplomatico.demo.beverage
+package com.alecarnevale.diplomatico.demo.contributes.beverage
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

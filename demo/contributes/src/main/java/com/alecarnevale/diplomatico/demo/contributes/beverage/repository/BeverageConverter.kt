@@ -1,6 +1,6 @@
-package com.alecarnevale.diplomatico.demo.beverage.repository
+package com.alecarnevale.diplomatico.demo.contributes.beverage.repository
 
-import com.alecarnevale.diplomatico.demo.beverage.Beverage
+import com.alecarnevale.diplomatico.demo.contributes.beverage.Beverage
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

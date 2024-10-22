@@ -1,10 +1,10 @@
-package com.alecarnevale.diplomatico.demo.beverage.repository
+package com.alecarnevale.diplomatico.demo.contributes.beverage.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import com.alecarnevale.diplomatico.demo.beverage.BeverageEntity
-import com.alecarnevale.diplomatico.demo.beverage.BeverageEntityDao
-import com.alecarnevale.diplomatico.demo.beverage.Beverage
+import com.alecarnevale.diplomatico.demo.contributes.beverage.BeverageEntity
+import com.alecarnevale.diplomatico.demo.contributes.beverage.BeverageEntityDao
+import com.alecarnevale.diplomatico.demo.contributes.beverage.Beverage
 
 internal class BeverageRepository(
   private val beverageEntityDao: BeverageEntityDao,
