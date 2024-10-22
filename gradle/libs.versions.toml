@@ -13,7 +13,7 @@ composeBom = "2024.10.00"
 room = "2.6.1"
 ksp = "2.0.21-1.0.25"
 ksp-testing = "1.6.0"
-junit-jupiter = "5.11.2"
+junit-jupiter = "5.11.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
