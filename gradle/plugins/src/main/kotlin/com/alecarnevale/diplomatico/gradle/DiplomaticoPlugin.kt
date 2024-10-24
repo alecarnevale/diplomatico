@@ -56,7 +56,9 @@ internal class DiplomaticoPlugin : Plugin<Project> {
 
     tasks
       .matching {
-        it.name.startsWith("assemble") && it.name.contains(buildType, ignoreCase = true)
+        // in a multimodule project, the assemble of :app module doesn't request the assemble of other subprojects which it depends on
+        // but it always requires to run ksp on those modules
+        it.name.startsWith("ksp") && it.name.contains(buildType, ignoreCase = true)
       }.all {
         it.finalizedBy(tasks.named(taskName))
       }
