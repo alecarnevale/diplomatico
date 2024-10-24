@@ -14,7 +14,12 @@ internal class DiplomaticoPlugin : Plugin<Project> {
 
     with(target.extensions.getByType(AndroidComponentsExtension::class.java)) {
       onVariants {
-        val buildVariant = "${it.flavorName}${it.buildType?.capitalized()}"
+        val buildVariant =
+          if (it.flavorName.isNullOrBlank()) {
+            it.buildType!!
+          } else {
+            "${it.flavorName}${it.buildType?.capitalized()}"
+          }
         target.setupCheckRoomVersionsTask(buildVariant)
         target.setupUpdateRoomVersionsTask(buildVariant)
       }
