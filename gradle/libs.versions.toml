@@ -11,7 +11,7 @@ lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.3"
 composeBom = "2024.10.00"
 room = "2.6.1"
-ksp = "2.0.21-1.0.25"
+ksp = "2.0.21-1.0.26"
 ksp-testing = "1.6.0"
 junit-jupiter = "5.11.3"
 
