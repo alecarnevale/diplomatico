@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.alecarnevale.diplomatico.demo"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.alecarnevale.diplomatico.demo"
