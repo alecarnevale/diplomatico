@@ -7,5 +7,5 @@ import com.alecarnevale.diplomatico.demo.core.entities.BaseSpirit
 @Entity
 data class Cocktail(
   @PrimaryKey val name: String,
-  val bseSpirit: BaseSpirit,
+  val baseSpirit: BaseSpirit,
 )

@@ -64,7 +64,7 @@ internal class MainActivity : ComponentActivity() {
         drinkDatabase.cocktailDao().insertCocktail(
           Cocktail(
             name = "Cuba Libre",
-            bseSpirit =
+            baseSpirit =
               BaseSpirit(
                 name = "Rum",
                 distilled =
@@ -141,7 +141,7 @@ private fun GreetingPreview() {
         listOf(
           Cocktail(
             name = "Cuba Libre",
-            bseSpirit =
+            baseSpirit =
               BaseSpirit(
                 name = "Rum",
                 distilled =
