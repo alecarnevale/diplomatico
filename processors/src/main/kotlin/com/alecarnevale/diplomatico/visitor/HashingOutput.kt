@@ -8,6 +8,33 @@ import java.io.File
 import java.security.MessageDigest
 import java.util.Base64
 
+/**
+ * This data class to store those data that are considered as input for the hashing function.
+ *
+ * In the beginning the input was the entire file,
+ * but such a naive solution wouldn't work when the file lives in a different module rather than one under KSP processing
+ * because KSP processor cannot access a source file of a dependency module.
+ * So, let's consider just its (compiled) properties instead of the entire source file.
+ */
+private data class HashingDataHolder(
+  val qualifiedName: String,
+  val properties: List<Property>,
+) {
+  data class Property(
+    val qualifiedName: String,
+    val typeQualifiedName: String,
+  )
+
+  /**
+   * Compute hash function of this HashingDataHolder.
+   */
+  fun hash(): String =
+    properties
+      .flatMap { listOf(it.qualifiedName, it.typeQualifiedName) }
+      .plus(qualifiedName)
+      .merge()
+}
+
 internal class HashingOutput(
   private val resolver: Resolver,
   private val logger: KSPLogger,
@@ -64,16 +91,6 @@ internal class HashingOutput(
       Base64.getEncoder().encodeToString(this)
     }
 
-  private fun List<String>.merge(): String {
-    val hashesByteArray: ByteArray =
-      fold(byteArrayOf()) { acc: ByteArray, elem: String ->
-        acc + elem.toByteArray()
-      }
-    return with(MessageDigest.getInstance("SHA-256").digest(hashesByteArray)) {
-      Base64.getEncoder().encodeToString(this)
-    }
-  }
-
   // extract path of other classes that is being references in this entity (or class when call recursively)
   private fun KSClassDeclaration.resolveNestedClassesPath(): List<String> =
     declarations
@@ -94,5 +111,15 @@ internal class HashingOutput(
     return with(classDeclaration) {
       this?.resolveNestedClassesPath()?.plus(this.containingFile?.filePath) ?: emptyList()
     }
+  }
+}
+
+private fun List<String>.merge(): String {
+  val hashesByteArray: ByteArray =
+    fold(byteArrayOf()) { acc: ByteArray, elem: String ->
+      acc + elem.toByteArray()
+    }
+  return with(MessageDigest.getInstance("SHA-256").digest(hashesByteArray)) {
+    Base64.getEncoder().encodeToString(this)
   }
 }
