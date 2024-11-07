@@ -1,11 +1,11 @@
-package com.alecarnevale.diplomatico.demo.cocktail.converters
+package com.alecarnevale.diplomatico.demo.entities.converters
 
 import androidx.room.TypeConverter
-import com.alecarnevale.diplomatico.demo.cocktail.Distilled
+import com.alecarnevale.diplomatico.demo.core.entities.Distilled
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-internal class DistilledConverter {
+class DistilledConverter {
   @TypeConverter
   fun fromDistilled(distilled: Distilled): String = Json.encodeToString(distilled)
 

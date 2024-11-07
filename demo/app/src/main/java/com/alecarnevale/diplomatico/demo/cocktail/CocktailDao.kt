@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.alecarnevale.diplomatico.demo.entities.Cocktail
 
 @Dao
 internal interface CocktailDao {

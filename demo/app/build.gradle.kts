@@ -58,6 +58,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":demo:core-entities"))
+    implementation(project(":demo:entities"))
     implementation(project(":demo:contributes"))
 
     implementation(libs.androidx.room.runtime)
