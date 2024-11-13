@@ -1,5 +1,6 @@
 package com.alecarnevale.diplomatico.visitor
 
+import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSClassDeclaration
