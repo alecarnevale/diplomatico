@@ -9,6 +9,8 @@ import com.google.devtools.ksp.visitor.KSEmptyVisitor
 
 /**
  * Returns entities class declaration defined for the Room DB targeted with [HashingRoomDBVersion] annotation.
+ *
+ * It takes also into account any class set as contributing with [HashingRoomDBVersion.contributes]
  */
 internal class HashingRoomDBVersionVisitor(
   private val resolver: Resolver,
@@ -33,12 +35,33 @@ internal class HashingRoomDBVersionVisitor(
       return null
     }
 
-    return entitiesKSType
-      .mapNotNull { entityKSType ->
-        entityKSType.declaration.qualifiedName?.let { entityKsName ->
-          resolver.getClassDeclarationByName(entityKsName)
+    val entitiesClasses =
+      entitiesKSType
+        .mapNotNull { entityKSType ->
+          entityKSType.declaration.qualifiedName?.let { entityKsName ->
+            resolver.getClassDeclarationByName(entityKsName)
+          }
         }
-      }.toSet()
+
+    // then extracting each entity defined in the contributes field of HashingRoomDBVersion annotation
+    val hashingRoomDBVersionDeclaration =
+      classDeclaration.annotations.firstOrNull {
+        it.shortName.asString() == "HashingRoomDBVersion"
+      } ?: run {
+        logger.error("Missing HashingRoomDBVersion annotation for ${classDeclaration.qualifiedName?.asString()}")
+        return null
+      }
+    val contributesKSType = hashingRoomDBVersionDeclaration.arguments.firstOrNull { it.name?.asString() == "contributes" }?.value as? List<KSType>
+    val contributesClasses =
+      contributesKSType?.let {
+        it.mapNotNull { entityKSType ->
+          entityKSType.declaration.qualifiedName?.let { entityKsName ->
+            resolver.getClassDeclarationByName(entityKsName)
+          }
+        }
+      } ?: emptyList()
+
+    return (entitiesClasses + contributesClasses).toSet()
   }
 
   override fun defaultHandler(
