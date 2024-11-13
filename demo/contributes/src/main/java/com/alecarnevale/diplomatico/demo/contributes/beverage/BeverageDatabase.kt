@@ -5,8 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
+import com.alecarnevale.diplomatico.demo.core.entities.Soda
 
-@HashingRoomDBVersion
+@HashingRoomDBVersion(
+  contributes = [Soda::class], // this is a showcase to make a plain class as part of the hashing function without using ContributesRoomDBVersion annotation
+)
 @Database(
   entities = [
     BeverageEntity::class, // this is a showcase to make a plain class as part of the hashing function through ContributesRoomDBVersion annotation
