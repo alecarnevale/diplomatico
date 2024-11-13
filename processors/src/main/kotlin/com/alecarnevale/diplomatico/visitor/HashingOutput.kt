@@ -1,6 +1,7 @@
 package com.alecarnevale.diplomatico.visitor
 
 import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import java.security.MessageDigest
@@ -18,10 +19,16 @@ private data class HashingDataHolder(
   val qualifiedName: String?,
   val properties: List<Property>,
 ) {
-  data class Property(
-    val qualifiedName: String?,
-    val typeQualifiedName: KSType,
-  )
+  sealed interface Property {
+    data class Generic(
+      val qualifiedName: String?,
+      val typeQualifiedName: KSType,
+    ) : Property
+
+    data class Enum(
+      val simpleDeclarationName: String,
+    ) : Property
+  }
 
   /**
    * Compute hash function of this HashingDataHolder.
@@ -29,11 +36,15 @@ private data class HashingDataHolder(
   fun hash(): String =
     properties
       .flatMap {
-        listOf(
-          it.qualifiedName,
-          it.typeQualifiedName.declaration.qualifiedName
-            ?.asString(),
-        )
+        when (it) {
+          is Property.Generic ->
+            listOf(
+              it.qualifiedName,
+              it.typeQualifiedName.declaration.qualifiedName
+                ?.asString(),
+            )
+          is Property.Enum -> listOf(it.simpleDeclarationName)
+        }
       }.plus(qualifiedName)
       .filterNotNull()
       .merge()
@@ -90,22 +101,37 @@ internal class HashingOutput(
   )
 
   private fun KSClassDeclaration.toHashingDataHolder(): HashingDataHolder =
-    HashingDataHolder(
-      qualifiedName = qualifiedName?.asString(),
-      properties =
-        getAllProperties().toList().map { property ->
-          HashingDataHolder.Property(
-            qualifiedName = property.qualifiedName?.asString(),
-            typeQualifiedName = property.type.resolve(),
-          )
-        },
-    )
+    when (classKind) {
+      ClassKind.ENUM_CLASS ->
+        // when processing an enum class, we are interesting to declarations' name only
+        HashingDataHolder(
+          qualifiedName = qualifiedName?.asString(),
+          properties =
+            declarations.toList().map { declaration ->
+              HashingDataHolder.Property.Enum(
+                simpleDeclarationName = declaration.simpleName.asString(),
+              )
+            },
+        )
+      else ->
+        HashingDataHolder(
+          qualifiedName = qualifiedName?.asString(),
+          properties =
+            getAllProperties().toList().map { property ->
+              HashingDataHolder.Property.Generic(
+                qualifiedName = property.qualifiedName?.asString(),
+                typeQualifiedName = property.type.resolve(),
+              )
+            },
+        )
+    }
 
   // extract properties of other classes that is being references in this entity
   private fun HashingDataHolder.resolveNestedProperties(): List<HashingDataHolder> =
     properties
       .mapNotNull { property ->
-        val classProperty = property.typeQualifiedName.declaration as? KSClassDeclaration
+        // not need to go deep in the nesting structure if it's an enum class
+        val classProperty = (property as? HashingDataHolder.Property.Generic)?.typeQualifiedName?.declaration as? KSClassDeclaration
         classProperty?.toHashingDataHolder()
       }.run {
         // recursively append HashingDataHolder until no more property to process in the tree
