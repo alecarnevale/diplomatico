@@ -25,6 +25,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":demo:core-entities"))
+
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.compose.livedata)
     implementation(libs.androidx.core.ktx)
