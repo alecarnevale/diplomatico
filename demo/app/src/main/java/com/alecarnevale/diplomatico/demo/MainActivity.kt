@@ -27,9 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alecarnevale.diplomatico.demo.cocktail.BaseSpirit
-import com.alecarnevale.diplomatico.demo.cocktail.Cocktail
-import com.alecarnevale.diplomatico.demo.cocktail.Distilled
+import com.alecarnevale.diplomatico.demo.core.entities.BaseSpirit
+import com.alecarnevale.diplomatico.demo.entities.Cocktail
+import com.alecarnevale.diplomatico.demo.core.entities.Distilled
 import com.alecarnevale.diplomatico.demo.contributes.beverage.ContributesActivity
 import com.alecarnevale.diplomatico.demo.drink.Drink
 import com.alecarnevale.diplomatico.demo.ui.theme.DiplomaticoTheme
@@ -64,7 +64,7 @@ internal class MainActivity : ComponentActivity() {
         drinkDatabase.cocktailDao().insertCocktail(
           Cocktail(
             name = "Cuba Libre",
-            bseSpirit =
+            baseSpirit =
               BaseSpirit(
                 name = "Rum",
                 distilled =
@@ -141,7 +141,7 @@ private fun GreetingPreview() {
         listOf(
           Cocktail(
             name = "Cuba Libre",
-            bseSpirit =
+            baseSpirit =
               BaseSpirit(
                 name = "Rum",
                 distilled =

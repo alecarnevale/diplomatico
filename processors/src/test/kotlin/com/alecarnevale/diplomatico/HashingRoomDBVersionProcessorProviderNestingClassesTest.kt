@@ -61,7 +61,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.FooDatabase,VXV8r9+A5Dah0CFH58mqUmgOPWN1GDrCeTNcglifBEs=
+      com.example.FooDatabase,y9BpgmFflfSqgBI0zsxl9beoQuF6+MBJxQK9R0HMuD8=
       
       """,
     )
@@ -87,7 +87,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.FooDatabase,H5kWB5LSqBIklkIObUliZiz8xff0dU9ZG/ZZcIi05tU=
+      com.example.FooDatabase,b3OUOqDP0bKgWmkE+txWoaf2GSyr9UyyGALyub9XhBI=
       
       """,
     )
@@ -157,7 +157,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.FooDatabase,OpPxRPOJUxXQenwzaahYoD5a/3i0vpMuhe+Vw+jdnSg=
+      com.example.FooDatabase,O76dRCipSUXmmNdI1CqzlspgjHylLro4IwMMFDD3wG8=
       
       """,
     )
@@ -183,7 +183,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.FooDatabase,gaomIsPFM0dfF8S13Y0V7l0EY82qiULQvlG/nJqxgLY=
+      com.example.FooDatabase,rOA78GDWden8Oo8pE0ROyTSJ14vEBaKiedH15fyxtrM=
       
       """,
     )
@@ -241,7 +241,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.FooDatabase,WsYkH1swYeY1fXKvfhDbLmiw5D8lQF5QiKV7r8AOy9M=
+      com.example.FooDatabase,Iy5TO4RqN7utUl4D974I4e7tTk2N2/DZDJqYsR3/DmE=
       
       """,
     )
@@ -266,7 +266,7 @@ internal class HashingRoomDBVersionProcessorProviderNestingClassesTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.FooDatabase,gkbeOsr2pgHuYb26BQGfXrwwtoutD3Xx8x7+vpjdGYg=
+      com.example.FooDatabase,3FrIfvlCGL9vamIz7ZU2yXkPa3SK5sZY2mfR62s6shk=
       
       """,
     )

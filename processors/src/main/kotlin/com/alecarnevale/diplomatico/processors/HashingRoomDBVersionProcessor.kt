@@ -74,7 +74,7 @@ internal class HashingRoomDBVersionProcessor(
       }
 
     // generate an Output for each database, computing hash value from the set of entities (+ contributes + nested) found in the previous steps
-    val hashingOutput = HashingOutput(resolver, logger)
+    val hashingOutput = HashingOutput(logger)
     mergedEntities.entries.forEach {
       hashingOutput.generate(it.key, it.value)?.let { output ->
         outputs.add(output)

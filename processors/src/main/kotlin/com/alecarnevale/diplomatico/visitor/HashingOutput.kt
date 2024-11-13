@@ -1,15 +1,56 @@
 package com.alecarnevale.diplomatico.visitor
 
 import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
-import java.io.File
+import com.google.devtools.ksp.symbol.KSType
 import java.security.MessageDigest
 import java.util.Base64
 
+/**
+ * This data class to store those data that are considered as input for the hashing function.
+ *
+ * In the beginning the input was the entire file,
+ * but such a naive solution wouldn't work when the file lives in a different module rather than one under KSP processing
+ * because KSP processor cannot access a source file of a dependency module.
+ * So, let's consider just its (compiled) properties instead of the entire source file.
+ */
+private data class HashingDataHolder(
+  val qualifiedName: String?,
+  val properties: List<Property>,
+) {
+  sealed interface Property {
+    data class Generic(
+      val qualifiedName: String?,
+      val typeQualifiedName: KSType,
+    ) : Property
+
+    data class Enum(
+      val simpleDeclarationName: String,
+    ) : Property
+  }
+
+  /**
+   * Compute hash function of this HashingDataHolder.
+   */
+  fun hash(): String =
+    properties
+      .flatMap {
+        when (it) {
+          is Property.Generic ->
+            listOf(
+              it.qualifiedName,
+              it.typeQualifiedName.declaration.qualifiedName
+                ?.asString(),
+            )
+          is Property.Enum -> listOf(it.simpleDeclarationName)
+        }
+      }.plus(qualifiedName)
+      .filterNotNull()
+      .merge()
+}
+
 internal class HashingOutput(
-  private val resolver: Resolver,
   private val logger: KSPLogger,
 ) {
   /**
@@ -23,22 +64,22 @@ internal class HashingOutput(
     contributingClasses: Set<KSClassDeclaration>,
   ): Output? {
     // generate hash for each file in contributingClasses
-    val entitiesFilePath =
+    val entitiesHashingDataHolders: List<HashingDataHolder> =
       contributingClasses.map {
-        it.containingFile!!.filePath
+        it.toHashingDataHolder()
       }
-    // generate hash also for nested class in contributingClasses
-    // so, retrieve file path of nested classes for each contributingClasses
-    val nestedClassesFilePath =
-      contributingClasses.flatMap { nestedClass ->
-        nestedClass.resolveNestedClassesPath()
+    // generate hash also for nested properties of entities
+    // so, retrieve data holders of nested properties for each entitiesHashingDataHolders (recursively)
+    val nestedHashingDataHolders: List<HashingDataHolder> =
+      entitiesHashingDataHolders.flatMap { entityHashingDataHolder ->
+        entityHashingDataHolder.resolveNestedProperties()
       }
 
     val hash =
-      entitiesFilePath
-        .map { hashingFile(it) }
+      entitiesHashingDataHolders
+        .map { it.hash() }
         // concat entities' hashes with its nested class' hashes
-        .plus(nestedClassesFilePath.map { hashingFile(it) })
+        .plus(nestedHashingDataHolders.map { it.hash() })
         // generate a single String starting many ones
         .merge()
 
@@ -59,40 +100,51 @@ internal class HashingOutput(
     val hash: String,
   )
 
-  private fun hashingFile(filePath: String): String =
-    with(MessageDigest.getInstance("SHA-256").digest(File(filePath).readBytes())) {
-      Base64.getEncoder().encodeToString(this)
+  private fun KSClassDeclaration.toHashingDataHolder(): HashingDataHolder =
+    when (classKind) {
+      ClassKind.ENUM_CLASS ->
+        // when processing an enum class, we are interesting to declarations' name only
+        HashingDataHolder(
+          qualifiedName = qualifiedName?.asString(),
+          properties =
+            declarations.toList().map { declaration ->
+              HashingDataHolder.Property.Enum(
+                simpleDeclarationName = declaration.simpleName.asString(),
+              )
+            },
+        )
+      else ->
+        HashingDataHolder(
+          qualifiedName = qualifiedName?.asString(),
+          properties =
+            getAllProperties().toList().map { property ->
+              HashingDataHolder.Property.Generic(
+                qualifiedName = property.qualifiedName?.asString(),
+                typeQualifiedName = property.type.resolve(),
+              )
+            },
+        )
     }
 
-  private fun List<String>.merge(): String {
-    val hashesByteArray: ByteArray =
-      fold(byteArrayOf()) { acc: ByteArray, elem: String ->
-        acc + elem.toByteArray()
+  // extract properties of other classes that is being references in this entity
+  private fun HashingDataHolder.resolveNestedProperties(): List<HashingDataHolder> =
+    properties
+      .mapNotNull { property ->
+        // not need to go deep in the nesting structure if it's an enum class
+        val classProperty = (property as? HashingDataHolder.Property.Generic)?.typeQualifiedName?.declaration as? KSClassDeclaration
+        classProperty?.toHashingDataHolder()
+      }.run {
+        // recursively append HashingDataHolder until no more property to process in the tree
+        this.plus(this.flatMap { it.resolveNestedProperties() })
       }
-    return with(MessageDigest.getInstance("SHA-256").digest(hashesByteArray)) {
-      Base64.getEncoder().encodeToString(this)
-    }
-  }
+}
 
-  // extract path of other classes that is being references in this entity (or class when call recursively)
-  private fun KSClassDeclaration.resolveNestedClassesPath(): List<String> =
-    declarations
-      .toList()
-      .filterIsInstance<KSPropertyDeclaration>()
-      .flatMap { property ->
-        property.resolveFilePath()
-      }.filterNotNull()
-
-  // return the file path of this declaration, if it's not a primitive type
-  private fun KSPropertyDeclaration.resolveFilePath(): List<String?> {
-    val classDeclaration =
-      type.resolve().declaration.qualifiedName?.let {
-        // when resolving a primitive type (Int, String...) null is returned
-        resolver.getClassDeclarationByName(it)
-      }
-    // return this file path (if not null) + any other file path discovered with this as root
-    return with(classDeclaration) {
-      this?.resolveNestedClassesPath()?.plus(this.containingFile?.filePath) ?: emptyList()
+private fun List<String>.merge(): String {
+  val hashesByteArray: ByteArray =
+    fold(byteArrayOf()) { acc: ByteArray, elem: String ->
+      acc + elem.toByteArray()
     }
+  return with(MessageDigest.getInstance("SHA-256").digest(hashesByteArray)) {
+    Base64.getEncoder().encodeToString(this)
   }
 }

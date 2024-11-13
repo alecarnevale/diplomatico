@@ -6,12 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.alecarnevale.diplomatico.annotations.HashingRoomDBVersion
-import com.alecarnevale.diplomatico.demo.cocktail.Cocktail
 import com.alecarnevale.diplomatico.demo.cocktail.CocktailDao
-import com.alecarnevale.diplomatico.demo.cocktail.converters.BaseSpiritConverter
-import com.alecarnevale.diplomatico.demo.cocktail.converters.DistilledConverter
 import com.alecarnevale.diplomatico.demo.drink.Drink
 import com.alecarnevale.diplomatico.demo.drink.DrinkDao
+import com.alecarnevale.diplomatico.demo.entities.Cocktail
+import com.alecarnevale.diplomatico.demo.entities.converters.BaseSpiritConverter
+import com.alecarnevale.diplomatico.demo.entities.converters.DistilledConverter
 
 @HashingRoomDBVersion
 @Database(

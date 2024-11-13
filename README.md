@@ -79,7 +79,7 @@ For example, in a scenario like this:
 @Entity
 data class Cocktail(
   @PrimaryKey val name: String,
-  val bseSpirit: BaseSpirit,
+  val baseSpirit: BaseSpirit,
 )
 
 data class BaseSpirit(

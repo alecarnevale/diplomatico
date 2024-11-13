@@ -1,9 +1,9 @@
-package com.alecarnevale.diplomatico.demo.cocktail
+package com.alecarnevale.diplomatico.demo.core.entities
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class BaseSpirit(
+data class BaseSpirit(
   val name: String,
   val distilled: Distilled,
 )

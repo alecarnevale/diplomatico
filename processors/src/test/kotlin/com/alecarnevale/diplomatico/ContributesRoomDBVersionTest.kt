@@ -50,7 +50,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,ZvATGjEhqm3UGo4VWWDbbInWN8xLDlwYcSsn0i9oGFE=
+      com.example.BarDatabase,njAp7m9Tsys6zpPSDrIm9nqwpZUInkgEMeEvmmC/EJM=
       
       """,
     )
@@ -80,7 +80,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,Ca1ipokz9aM1frZdoZvny2JBnXG/uupLU/L/guJcacM=
+      com.example.BarDatabase,VwN0MfjF1NpvTHZVXmyn2oUuRFrOywTlFLR7oAOWIf4=
       
       """,
     )
@@ -110,7 +110,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,7rxoYLX1cg4rXv8bt72ACyjnPDNd0vQbtQiyomVXyjQ=
+      com.example.BarDatabase,rEiuH2b2S1D3CSTkpNqiotC1Ni8YaRt3c54nEGzHPiU=
       
       """,
     )
@@ -184,7 +184,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,UNc/khXpR0vSnCzefOVV3x0RKOcNgsm4uOb+0AtcWko=
+      com.example.BarDatabase,jprjjxUu6hflojmiMjLaXISJZroe2yHY8S5knK7ivlw=
       
       """,
     )
@@ -211,7 +211,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,i1HNIf2IKRAQq82z3KZSSwoDoBpM/ZekEee+4ZGET54=
+      com.example.BarDatabase,PLwiV1H4Ff/Gs4G5aR3TE3r/n3SNuvezaAtltRFq874=
       
       """,
     )
@@ -341,8 +341,8 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.BarDatabase,N4w+9bOiBO5H8lnV1N/lNydU4Ea7JLukzX7hybPnszQ=
-        com.example.FooDatabase,cI5RWIS4pdCkRqBFDrsoF3QSAfbRxYjr3N1ss0Xamdo=
+        com.example.BarDatabase,0TT0oeFKYYa3LVMDU5Iw8cQq+mn7R5eu+WN2Ue/koIk=
+        com.example.FooDatabase,xv3SgBTwWu3J6QghkxooWXgDblHhDtyK6azPwAttli0=
       
       """,
     )
@@ -369,8 +369,8 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.BarDatabase,N4w+9bOiBO5H8lnV1N/lNydU4Ea7JLukzX7hybPnszQ=
-        com.example.FooDatabase,1RH+e+UF9smlGSoyPtBoQMdKGRomgw/Anjt598me14Q=
+        com.example.BarDatabase,0TT0oeFKYYa3LVMDU5Iw8cQq+mn7R5eu+WN2Ue/koIk=
+        com.example.FooDatabase,+JwoZOKawATYKV3R/Vd2lJroFoRq8aVgoYcbwKlpC5M=
       
       """,
     )
@@ -397,8 +397,8 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.BarDatabase,1tqYFpBmDzQmb1mU+2Z9CxmzTTy7UUCwhFphfBBbK/k=
-        com.example.FooDatabase,1RH+e+UF9smlGSoyPtBoQMdKGRomgw/Anjt598me14Q=
+        com.example.BarDatabase,4ZWwXLBe4200CGcpxHUOj/cC5UF3VqN9ypiwB4PnWkQ=
+        com.example.FooDatabase,+JwoZOKawATYKV3R/Vd2lJroFoRq8aVgoYcbwKlpC5M=
       
       """,
     )
@@ -459,7 +459,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.FooDatabase,WPc7hJzl2lwuRhvC+6tN6nqrlg91zqwuhfqHsbNn86c=
+        com.example.FooDatabase,pEcTXkEPhpDI8XPOWiVGUoNVpOKoDOOtNS1eRTr6f3M=
       
       """,
     )
@@ -488,7 +488,7 @@ internal class ContributesRoomDBVersionTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-        com.example.FooDatabase,5FX3v/br+vOTRegzl/BZ9QgpSn3psLn40T5QZ7fjC5I=
+        com.example.FooDatabase,bARZ4JEOwtZb8oDUsVSqAvTVNKl6HUOFig+4fhK1Mvw=
       
       """,
     )
