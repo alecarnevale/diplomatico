@@ -5,11 +5,14 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
 import java.io.File
 
 /**
  * This task check that the two report files contains the same output (name,sha) for each entity.
  */
+@DisableCachingByDefault(because = "This task does not produce any output, it executes only a check between two files.")
+// disabling caching is mandatory, otherwise gradle may complain when trying to cache this task
 internal abstract class CheckRoomVersionsTask : DefaultTask() {
   @get:InputFile
   abstract val buildReport: Property<File>
