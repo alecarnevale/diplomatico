@@ -118,7 +118,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.FooDatabase,rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=
+      com.example.FooDatabase,4BIslonxrYg+Eq1OHnIu5VMwqnTOkUzD5c4j5h/Vzjw=
       
       """,
     )
@@ -209,8 +209,8 @@ internal class HashingRoomDBVersionProcessorProviderTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.BarDatabase,OjhLbkbaR7D2Z5TUDoLt7Llsd/terCdAi1jI3pdMbuU=
-      com.example.FooDatabase,rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=
+      com.example.BarDatabase,aoNAeHhz8zJPcAiGO3aET4lk/MgY04G58jya10rHYkM=
+      com.example.FooDatabase,4BIslonxrYg+Eq1OHnIu5VMwqnTOkUzD5c4j5h/Vzjw=
       
       """,
     )
@@ -256,7 +256,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.FooDatabase,rH6hy7aLdVv1fxCZlPqtsqRZauGUsJTim0CxRMDo8vg=
+      com.example.FooDatabase,4BIslonxrYg+Eq1OHnIu5VMwqnTOkUzD5c4j5h/Vzjw=
       
       """,
     )
@@ -285,7 +285,7 @@ internal class HashingRoomDBVersionProcessorProviderTest {
     result.assertGeneratedContent(
       "com/alecarnevale/diplomatico/results/report.csv",
       """
-      com.example.FooDatabase,NyNDpYWpN9vFEOcaDrAI7JLXXA6MgaIKN1TLQQ7m/ms=
+      com.example.FooDatabase,c4Yz91NhE2Y30ufYjwWUR7obnuBHVI96gaOfcWN5loc=
       
       """,
     )
