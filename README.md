@@ -119,6 +119,30 @@ data class Beverage(
 
 even if `BeverageEntity` doesn't know `Beverage` (and viceversa) any changes to `Beverage` let the build fails because now `Beverage` is considered as an input for the hash of `DrinkDatabase`.
 
+Another approach to achieve the same goal is through `HashingRoomDBVersion.contributes`.
+
+It is specially useful when the class that contributes to the database belongs to a modules that cannot depend on to the module where the database live.
+
+For example, in a scenario like this:
+
+```
+// :demo:contributes --> :demo:core-entities
+
+// this is in :demo:core-entities
+data class Soda(
+  val name: String,
+  // any change here must trigger a new change in the report
+)
+
+// this is in :demo:contributes
+@HashingRoomDBVersion(contributes = [Soda::class])
+@Database(
+  entities = [...],
+  version = 1,
+)
+abstract class BeverageDatabase : RoomDatabase()
+```
+
 ## 🎮 Demo
 Take a look at:
 - `:demo` module for a [sample usage](https://github.com/alecarnevale/diplomatico/tree/master/demo);
@@ -127,7 +151,9 @@ Take a look at:
 - [Red PR - nested classes](https://github.com/alecarnevale/diplomatico/pull/42) that is failing because a change has been introduce for a class that is nested in a field of an entity and so the versioned report is outdated;
 - [Green PR - nested classes](https://github.com/alecarnevale/diplomatico/pull/43) that is ready to be merged because after changing a class that is nested in a field of an entity it also updated the versioned report;
 - [Red PR - contributing classes](https://github.com/alecarnevale/diplomatico/pull/44) that is failing because a change has been introduce for a class contributing to a database and so the versioned report is outdated;
-- [Green PR - nested classes](https://github.com/alecarnevale/diplomatico/pull/45) that is ready to be merged because after changing a class contributing to a database it also updated the versioned report.
+- [Green PR - nested classes](https://github.com/alecarnevale/diplomatico/pull/45) that is ready to be merged because after changing a class contributing to a database it also updated the versioned report;
+- [Red PR - contributing classes with contributes property](https://github.com/alecarnevale/diplomatico/pull/59) that is failing because a change has been introduce for a class contributing to a database, through `HashingRoomDBVersion.contributes`, and so the versioned report is outdated;
+- [Green PR - nested classes with contributes property](https://github.com/alecarnevale/diplomatico/pull/60) that is ready to be merged because after changing a class contributing to a database, through `HashingRoomDBVersion.contributes`, it also updated the versioned report.
 
 ## 🛠️ Installation
 
