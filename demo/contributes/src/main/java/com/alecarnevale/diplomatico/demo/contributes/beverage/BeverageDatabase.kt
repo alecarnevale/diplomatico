@@ -14,7 +14,7 @@ import com.alecarnevale.diplomatico.demo.core.entities.Soda
   entities = [
     BeverageEntity::class, // this is a showcase to make a plain class as part of the hashing function through ContributesRoomDBVersion annotation
   ],
-  version = 1,
+  version = 2,
 )
 internal abstract class BeverageDatabase : RoomDatabase() {
   abstract fun beverageEntityDao(): BeverageEntityDao
