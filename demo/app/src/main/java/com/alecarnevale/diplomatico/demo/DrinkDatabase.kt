@@ -19,7 +19,7 @@ import com.alecarnevale.diplomatico.demo.entities.converters.DistilledConverter
     Drink::class, // this is a showcase for the base case: a change in a Room Entity must trigger a change in the report
     Cocktail::class, // this is a showcase for the nested classes case: when there is a change in a nested class then the report must change
   ],
-  version = 1,
+  version = 2,
 )
 @TypeConverters(
   BaseSpiritConverter::class,
